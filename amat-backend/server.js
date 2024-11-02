@@ -16,11 +16,11 @@ app.use(cors());
 const mongoURI = process.env.MONGO_URI;
 
 mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoURI)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("Error connecting to MongoDB:", err));
 
-// Basic routes
+// Basic route for testing
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
