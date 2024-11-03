@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-const mongoURI = "mongodb+srv://psenyo197:frRypuDRiCI3P9bH@cluster0.gmkea.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoURI = mongodb+srv://psenyo197:frRypuDRiCI3P9bH@cluster0.gmkea.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0;
 
 mongoose
   .connect(mongoURI)
