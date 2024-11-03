@@ -16,7 +16,7 @@ app.use(cors());
 const mongoURI = process.env.MONGO_URI;
 
 mongoose
-  .connect(mongoURI)
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("Error connecting to MongoDB:", err));
 
@@ -43,5 +43,5 @@ app.use("/api/book-appointment", bookAppointmentRoutes);
 
 // Start the server
 app.listen(port, () => {
-  console.log(Server is running on port: ${port});
+  console.log(`Server is running on port: ${port}`);
 });
