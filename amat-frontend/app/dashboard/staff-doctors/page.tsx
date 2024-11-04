@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
-import { FaUser, FaUserMd, FaTrash, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
 export default function DoctorsPage() {
   const medicalprofessional = {

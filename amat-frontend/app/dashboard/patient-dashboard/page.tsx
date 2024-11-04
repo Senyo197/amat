@@ -151,7 +151,7 @@ export default function PatientDashboard() {
       <Sidebar patient={patient} />
 
       <div className="flex-1 flex flex-col">
-        {/* Navbar */}
+        {/* Navbar  */}
         <DashboardNavbar toggleMenu={toggleMenu} />
 
         {/* Content */}

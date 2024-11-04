@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
-import { FaUser, FaUserNurse, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 import MedicalModal from "@/app/_components/dashboard/MedicalModal";
 import axios from "axios";
 

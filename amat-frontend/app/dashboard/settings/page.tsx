@@ -59,16 +59,18 @@ export default function Settings() {
     fetchPatientData();
   }, []);
 
+  // Initial settings data
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: "John Doe",
-    dob: "1990-01-01",
-    gender: "male",
-    email: "johndoe@example.com",
-    phoneNumber: "123-456-7890",
-    address: "123 Main St",
-    city: "Anytown",
-    country: "USA",
-    preExistingConditions: "None",
+    name: "",
+    dob: "",
+    age: "",
+    gender: "other",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    city: "",
+    country: "",
+    preExistingConditions: "",
     currentMedications: "",
   });
 
@@ -85,19 +87,52 @@ export default function Settings() {
     twoFactorAuth: false,
   });
 
-  const handleProfileSave = (data: ProfileData) => {
-    setProfileData(data);
-    console.log("Profile data saved:", data);
+  const handleProfileSave = async (data: ProfileData) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/profile`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setProfileData(data);
+      console.log("Profile data saved:", data);
+    } catch (error) {
+      console.error("Error saving profile data:", error);
+    }
   };
 
-  const handleNotificationSave = (data: NotificationData) => {
-    setNotificationData(data);
-    console.log("Notification settings saved:", data);
+  const handleNotificationSave = async (data: NotificationData) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/notifications`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setNotificationData(data);
+      console.log("Notification settings saved:", data);
+    } catch (error) {
+      console.error("Error saving notification settings:", error);
+    }
   };
 
-  const handleSecuritySave = (data: SecurityData) => {
-    setSecurityData(data);
-    console.log("Security settings saved:", data);
+  const handleSecuritySave = async (data: SecurityData) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/security`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      setSecurityData(data);
+      console.log("Security settings saved:", data);
+    } catch (error) {
+      console.error("Error saving security settings:", error);
+    }
   };
 
   if (!patient) {

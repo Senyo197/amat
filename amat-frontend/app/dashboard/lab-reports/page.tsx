@@ -1,12 +1,10 @@
-// LabReportsPage.tsx
-
 "use client";
 import { useState } from "react";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
 import AddReportModal from "@/app/_components/AddReportModal";
 import ReportDetailsModal from "@/app/_components/ReportDetailsModal";
-import { FaPlus, FaEye } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 
 type ReportDetailsType = {
   id: string;

@@ -7,9 +7,6 @@ import {
   FaEdit,
   FaTrash,
   FaHome,
-  FaChevronDown,
-  FaChevronUp,
-  FaSearch,
   FaPlusCircle,
 } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
