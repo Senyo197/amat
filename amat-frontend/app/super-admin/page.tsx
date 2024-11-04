@@ -1,5 +1,5 @@
 "use client";
-import DashboardNavbar from "@/app/_components/DashboardNavbar";
+import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import { useState } from "react";
 import {
   FaHospital,
@@ -53,7 +53,7 @@ export default function SuperAdminDashboard() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Line chart data
+  // Line  chart data
   const chartData = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
@@ -131,7 +131,7 @@ export default function SuperAdminDashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         <div className="bg-white shadow-md">
-          <DashboardNavbar />
+          <DashboardNavbar toggleMenu={toggleDropdown} />
         </div>
         <div className="p-6">
           {/* Top Analytics Summary */}
