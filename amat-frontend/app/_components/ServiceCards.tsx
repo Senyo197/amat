@@ -125,13 +125,13 @@ export default function ServiceCards() {
       <div className="flex justify-center mt-4">
         <button
           onClick={prevSection}
-          className="mx-2 p-2 bg-blue-100 text-white rounded-full hover:bg-blue-200"
+          className="mx-2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-800"
         >
           <FaArrowLeft className="text-2xl" />
         </button>
         <button
           onClick={nextSection}
-          className="mx-2 p-2 bg-blue-100 text-white rounded-full hover:bg-blue-200"
+          className="mx-2 p-2 bg-blue-500 text-white rounded-full hover:bg-blue-800"
         >
           <FaArrowRight className="text-2xl" />
         </button>

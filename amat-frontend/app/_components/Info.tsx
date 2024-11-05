@@ -2,43 +2,45 @@ import React from "react";
 
 export default function Info() {
   return (
-    <section className="mb-12">
-      <div className="w-[1000px] px-2 py-8 mx-auto">
+    <section className="mb-12 px-4">
+      <div className="container mx-auto py-8">
         {/* Adjusted for layout */}
         <div className="bg-primary-700 rounded-lg shadow-lg overflow-hidden dark:bg-blue-200">
-          <div className="flex flex-col lg:flex-row lg:gap-4 items-center">
+          <div className="flex flex-col lg:flex-row lg:gap-8 items-center">
             {/* Text Section */}
-            <div className="mr-auto place-self-center lg:col-span-7 p-4">
-              <h1 className="max-w-2xl mb-2 text-3xl font-semibold tracking-tight leading-tight md:text-4xl xl:text-3xl dark:text-black">
+            <div className="flex-1 p-4 text-center lg:text-left">
+              <h1 className="max-w-2xl mb-2 text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight leading-tight dark:text-black">
                 Advans Medical and Trendy Health Consultancy
               </h1>
-              <p className="max-w-2xl mb-4 font-light text-gray-200 lg:mb-6 md:text-base lg:text-lg dark:text-gray-600">
+              <p className="max-w-2xl mb-4 text-gray-200 font-light md:text-lg dark:text-gray-600">
                 Live Right Live Well: Consult A Doctor Anytime
               </p>
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-4 py-2 mr-2 text-base font-medium text-center text-black rounded-lg bg-primary-800 hover:bg-primary-900 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
-              >
-                Get started
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-center text-blue-200 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-blue-900 dark:border-blue-200 dark:hover:bg-blue-400 dark:focus:ring-gray-800"
-              >
-                Speak Us
-              </a>
+              <div className="flex flex-col md:flex-row gap-3 justify-center lg:justify-start">
+                <a
+                  href="#"
+                  className="px-4 py-2 text-base font-medium text-center text-black bg-primary-800 rounded-lg hover:bg-primary-900 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900"
+                >
+                  Get started
+                </a>
+                <a
+                  href="#"
+                  className="px-4 py-2 text-base font-medium text-center text-blue-200 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-blue-900 dark:border-blue-200 dark:hover:bg-blue-400 dark:focus:ring-gray-800"
+                >
+                  Speak Us
+                </a>
+              </div>
             </div>
-            {/* Card Section replacing image */}
-            <div className="flex w-full p-10 max-w-md flex-col rounded-lg bg-white shadow-sm border border-slate-200 my-6 lg:col-span-5 ml-[-0px]">
+            {/* Card Section */}
+            <div className="w-full max-w-sm mx-auto lg:mx-0 lg:max-w-md p-6 bg-white shadow-sm border border-slate-200 rounded-lg">
               <div className="flex items-center gap-4 text-slate-800">
                 <img
                   src="https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Tania Andrew"
-                  className="relative inline-block h-[58px] w-[58px] !rounded-full object-cover object-center"
+                  className="h-14 w-14 rounded-full object-cover object-center"
                 />
-                <div className="flex w-full flex-col">
-                  <div className="flex items-center justify-between">
-                    <h5 className="text-xl font-semibold text-slate-800">
+                <div className="flex-1">
+                  <div className="flex justify-between items-center">
+                    <h5 className="text-lg md:text-xl font-semibold text-slate-800">
                       Dr. Joshua
                     </h5>
                     <div className="flex items-center gap-1">
@@ -59,13 +61,13 @@ export default function Info() {
                       ))}
                     </div>
                   </div>
-                  <p className="text-xs uppercase font-bold text-slate-500 mt-0.5">
+                  <p className="text-xs font-bold text-slate-500 mt-0.5">
                     Medical Doctor @ Ridge Hospital
                   </p>
                 </div>
               </div>
               <div className="mt-6">
-                <p className="text-base text-slate-600 font-light leading-normal">
+                <p className="text-sm md:text-base text-slate-600 font-light leading-normal">
                   &quot;Wherever the art of Medicine is loved, there is also a
                   love of Humanity!!!&quot;
                 </p>
