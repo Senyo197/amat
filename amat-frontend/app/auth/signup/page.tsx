@@ -44,7 +44,7 @@ export default function Signup() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/signup",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/signup`,
         formData
       );
       if (response.status === 201) {

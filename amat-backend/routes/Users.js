@@ -11,7 +11,6 @@ router.post("/signup", async (req, res) => {
     const {
       name,
       dob,
-      age,
       gender,
       email,
       phonenumber,
@@ -37,7 +36,6 @@ router.post("/signup", async (req, res) => {
     user = new User({
       name,
       dob,
-      age,
       gender,
       email,
       phonenumber,
@@ -55,10 +53,15 @@ router.post("/signup", async (req, res) => {
       { id: user._id, name: user.name },
       process.env.JWT_SECRET,
       {
-        expiresIn: 86400,
+        expiresIn: 86400, // 24 hours
       }
     );
-    res.status(201).json(user);
+
+    // Remove password from response
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(201).json({ user: userResponse, token });
   } catch (err) {
     console.error("Error creating user:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -88,7 +91,11 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    res.status(200).json({ user, token });
+    // Remove password from response
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json({ user: userResponse, token });
   } catch (err) {
     console.error("Error logging in:", err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -98,7 +105,7 @@ router.post("/login", async (req, res) => {
 // Protected route to get user data
 router.get("/protected", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -112,10 +119,72 @@ router.get("/protected", verifyToken, async (req, res) => {
 // Get all users
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
     res.status(200).json(users);
   } catch (err) {
     console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Update Profile Settings
+router.put("/profile", verifyToken, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { name, email, dob, gender, phonenumber, address, city, country } =
+      req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, email, dob, gender, phonenumber, address, city, country },
+      { new: true }
+    ).select("-password");
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error updating profile settings:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Update Notification Settings
+router.put("/notifications", verifyToken, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { emailNotifications, smsNotifications, pushNotifications } =
+      req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        "notifications.emailNotifications": emailNotifications,
+        "notifications.smsNotifications": smsNotifications,
+        "notifications.pushNotifications": pushNotifications,
+      },
+      { new: true }
+    ).select("-password");
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error updating notification settings:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Update Security Settings
+router.put("/security", verifyToken, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { newPassword, twoFactorAuth } = req.body;
+
+    const updates = { twoFactorAuth };
+    if (newPassword) {
+      const salt = await bcrypt.genSalt(10);
+      updates.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+    }).select("-password");
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error("Error updating security settings:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
