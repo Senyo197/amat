@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import DashboardNavMenu from "@/app/_components/dashboard/DashboardNavMenu";
 import DashboardSidebar from "@/app/_components/dashboard/Sidebar";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import ProfileSettings, {
@@ -23,10 +22,7 @@ interface Patient {
 }
 
 export default function Settings() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
-
-  const toggleMenu = () => setIsSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -63,7 +59,6 @@ export default function Settings() {
   const [profileData, setProfileData] = useState<ProfileData>({
     name: "",
     dob: "",
-    age: "",
     gender: "other",
     email: "",
     phoneNumber: "",
@@ -141,20 +136,13 @@ export default function Settings() {
 
   return (
     <div className="flex h-screen bg-gray-100 text-black">
-      {/* Mobile Sidebar Menu */}
-      <DashboardNavMenu
-        patient={patient}
-        isOpen={isSidebarOpen}
-        toggleMenu={toggleMenu}
-      />
-
       {/* Desktop Sidebar Menu */}
       <DashboardSidebar patient={patient} />
 
       {/* Main Content Area */}
       <div className="flex flex-col flex-1">
         {/* Navbar */}
-        <DashboardNavbar toggleMenu={toggleMenu} />
+        <DashboardNavbar />
 
         {/* Content */}
         <main className="flex-1 p-6 overflow-auto">

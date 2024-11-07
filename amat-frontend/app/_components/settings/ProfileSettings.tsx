@@ -4,7 +4,6 @@ import { FaEdit, FaSave, FaTimes } from "react-icons/fa";
 export interface User {
   name: string;
   dob: string;
-  age: string;
   gender: "male" | "female" | "other";
   email: string;
   phoneNumber: string;
@@ -30,7 +29,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ data, onSave }) => {
   const [formData, setFormData] = useState<ProfileData>({
     name: data.name || "",
     dob: data.dob || "",
-    age: data.age || "",
     gender: data.gender || "other",
     email: data.email || "",
     phoneNumber: data.phoneNumber || "",
@@ -49,7 +47,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ data, onSave }) => {
     setFormData({
       name: data.name || "",
       dob: data.dob || "",
-      age: data.age || "",
       gender: data.gender || "other",
       email: data.email || "",
       phoneNumber: data.phoneNumber || "",
@@ -149,29 +146,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ data, onSave }) => {
                 autoComplete="bday"
                 required
                 value={formData.dob}
-                onChange={handleChange}
-                className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm 
-                ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 
-                sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          {/* Age */}
-          <div>
-            <label
-              htmlFor="age"
-              className="block text-sm font-medium leading-6 text-blue-900"
-            >
-              Age
-            </label>
-            <div>
-              <input
-                id="age"
-                name="age"
-                type="date"
-                autoComplete="bday"
-                required
-                value={formData.age}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm 
                 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 

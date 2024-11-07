@@ -42,11 +42,7 @@ export default function DoctorsPage() {
       <MedicalDashboardSidebar medicalprofessional={medicalprofessional} />
       <div className="flex-1 flex flex-col">
         <div className="bg-white shadow-md">
-          <DashboardNavbar
-            toggleMenu={function (): void {
-              throw new Error("Function not implemented.");
-            }}
-          />
+          <DashboardNavbar />
         </div>
         <div className="flex flex-col mt-4 mx-4">
           <h2 className="text-2xl font-bold mb-4 text-black">

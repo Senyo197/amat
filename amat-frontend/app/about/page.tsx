@@ -6,10 +6,12 @@ import Image from "next/image";
 export default function About() {
   return (
     <section className="mb-20 p-5 pt-32">
-      <h1 className="text-3xl font-bold mb-6 text-blue-900 ml-10">About Us</h1>
+      <h1 className="text-3xl font-bold mb-6 text-blue-900 text-center lg:ml-10">
+        About Us
+      </h1>
       <BlueCard
         title={<h3 className="text-black">Reaching out to the world!</h3>}
-        className="h-[160px] w-[750px] bg-blue-400"
+        className="h-[160px] w-full lg:w-[750px] bg-blue-400 mx-auto"
       >
         <p className="text-black text-lg">
           At AMaT-HCL® we provide 24/7 Medical and Health advisory and resources
@@ -17,8 +19,8 @@ export default function About() {
         </p>
       </BlueCard>
 
-      <div className="flex flex-col lg:flex-row mt-10 gap-6">
-        <div className="flex-1 flex flex-col justify-center ml-20">
+      <div className="flex flex-col lg:flex-row mt-10 gap-6 px-5 lg:px-20">
+        <div className="flex-1 flex flex-col justify-center">
           <h2 className="text-blue-900 text-2xl font-semibold mb-4">
             OUR VISION
           </h2>
@@ -32,15 +34,15 @@ export default function About() {
           </p>
         </div>
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-96 h-72 relative rounded-full overflow-hidden border-4 border-blue-900">
+          <div className="w-full max-w-xs h-72 relative rounded-full overflow-hidden border-4 border-blue-900">
             <Image src={Vision} alt="Vision" layout="fill" objectFit="cover" />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row mt-10 gap-6">
+      <div className="flex flex-col lg:flex-row mt-10 gap-6 px-5 lg:px-20">
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-96 h-72 relative rounded-full overflow-hidden border-4 border-blue-900">
+          <div className="w-full max-w-xs h-72 relative rounded-full overflow-hidden border-4 border-blue-900">
             <Image
               src={Mission}
               alt="Mission"
@@ -49,7 +51,7 @@ export default function About() {
             />
           </div>
         </div>
-        <div className="flex-1 flex flex-col justify-center ml-20">
+        <div className="flex-1 flex flex-col justify-center">
           <h2 className="text-blue-900 text-2xl font-semibold mb-4">
             OUR MISSION
           </h2>
@@ -64,12 +66,12 @@ export default function About() {
           </p>
         </div>
       </div>
-      <div className="flex justify-center mt-10 mb-10">
-        <div className="text-center">
-          <h2 className="text-blue-900 text-3xl font-semibold mb-4">
+      <div className="flex justify-center mt-10 mb-10 px-5">
+        <div className="text-center max-w-2xl">
+          <h2 className="text-blue-900 text-2xl lg:text-3xl font-semibold mb-4">
             Seamless Consultation
           </h2>
-          <p className="text-blue-900">
+          <p className="text-blue-900 text-base lg:text-lg">
             Our team of experienced doctors and specialists provide thorough and
             accurate medical consultation, ensuring the best treatment for our
             patients. With our advanced technology, we offer virtual

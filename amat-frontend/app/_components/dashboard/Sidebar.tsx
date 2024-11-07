@@ -11,7 +11,9 @@ interface Patient {
   profession?: string;
 }
 
-// SVG components for the custom toggle icons
+{
+  /* SVG components for the custom toggle icons */
+}
 const OpenIcon = () => (
   <svg
     width="20"
@@ -20,7 +22,7 @@ const OpenIcon = () => (
     fill="currentColor"
     className="inline"
   >
-    <path d="M8 4l8 8-8 8" /> {/* Icon for `>>` */}
+    <path d="M8 4l8 8-8 8" />
   </svg>
 );
 
@@ -32,7 +34,7 @@ const CloseIcon = () => (
     fill="currentColor"
     className="inline"
   >
-    <path d="M16 4l-8 8 8 8" /> {/* Icon for `<<` */}
+    <path d="M16 4l-8 8 8 8" />
   </svg>
 );
 

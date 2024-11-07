@@ -9,9 +9,11 @@ export default function Services() {
       {/* Larger BlueCard */}
       <BlueCard
         title={
-          <h1 className="text-white text-4xl font-bold mt-10">Our Services</h1>
+          <h1 className="text-white text-3xl md:text-4xl font-bold mt-10">
+            Our Services
+          </h1>
         }
-        className="w-full md:max-w-[1000px] lg:max-w-[1200px] h-[800px] relative"
+        className="w-full max-w-[1000px] lg:max-w-[1200px] h-auto md:h-[800px] relative p-5"
         backgroundImageUrl={Doctors.src}
       >
         <p className="text-white text-2xl mt-5">
@@ -26,10 +28,13 @@ export default function Services() {
         <div
           className="absolute bg-blue-50 rounded-lg shadow-lg p-6 flex flex-col justify-start space-y-4"
           style={{
-            width: "800px",
-            height: "400px",
-            top: "45%",
-            left: "2%",
+            width: "90%",
+            maxWidth: "800px",
+            height: "auto",
+            maxHeight: "400px",
+            top: "50%",
+            left: "5%",
+            transform: "translateY(-50%)",
           }}
         >
           <div className="relative w-full">
@@ -56,10 +61,12 @@ export default function Services() {
             </div>
           </div>
           <div
-            className="absolute bg-blue-200 rounded-lg shadow-lg p-6 flex flex-col items-start space-y-2"
+            className="absolute bg-blue-200 rounded-lg shadow-lg p-4 md:p-6 flex flex-col items-start space-y-2"
             style={{
-              width: "230px",
-              height: "200px",
+              width: "90%",
+              maxWidth: "230px",
+              height: "auto",
+              maxHeight: "200px",
               top: "35%",
               left: "3%",
             }}
@@ -68,13 +75,13 @@ export default function Services() {
               <img
                 src="https://cdn-icons-png.flaticon.com/128/4320/4320371.png"
                 alt="Hospital Icon"
-                className="h-20 w-20 group-hover:opacity-80 transition duration-200 mt-5"
+                className="h-16 w-16 md:h-20 md:w-20 group-hover:opacity-80 transition duration-200 mt-5"
               />
-              <span className="text-blue-900 font-semibold text-xl">
+              <span className="text-blue-900 font-semibold text-lg md:text-xl">
                 Hospitals
               </span>
               <div className="flex items-center space-x-2 mt-2 group-hover:text-blue-600">
-                <span className="text-blue-950 font-medium transition duration-200 text-xl">
+                <span className="text-blue-950 font-medium transition duration-200 text-lg md:text-xl">
                   Explore
                 </span>
                 <svg
@@ -107,9 +114,9 @@ export default function Services() {
               <img
                 src="https://cdn-icons-png.flaticon.com/128/684/684908.png"
                 alt="Location Icon"
-                className="h-20 w-20 group-hover:opacity-80 group-hover:filter group-hover:brightness-150 transition duration-200 mt-5"
+                className="h-16 w-16 md:h-20 md:w-20 group-hover:opacity-80 transition duration-200 mt-5"
               />
-              <span className="text-blue-950 font-semibold text-xl">
+              <span className="text-blue-900 font-semibold text-lg md:text-xl">
                 Location
               </span>
               <div className="flex items-center space-x-2 mt-2 group-hover:text-blue-600">
@@ -146,9 +153,9 @@ export default function Services() {
               <img
                 src="https://cdn-icons-png.flaticon.com/128/2706/2706950.png"
                 alt="Services Icon"
-                className="h-20 w-20 group-hover:opacity-80 transition duration-200 mt-5"
+                className="h-16 w-16 md:h-20 md:w-20 group-hover:opacity-80 transition duration-200 mt-5"
               />
-              <span className="text-blue-950 font-semibold text-xl">
+              <span className="text-blue-900 font-semibold text-lg md:text-xl">
                 Services
               </span>
               <div className="flex items-center space-x-2 mt-2 group-hover:text-blue-600">
@@ -175,14 +182,14 @@ export default function Services() {
         </div>
       </BlueCard>
       <br />
-      <div className="flex flex-row items-center justify-between w-full md:max-w-[1200px]">
+      <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-[1200px] space-y-6 md:space-y-0">
         <BlueCard
           title={null}
-          className="w-full md:w-[500px] h-[400px] bg-blue-900 ml-10"
+          className="w-full md:w-[45%] h-[300px] md:h-[400px] bg-blue-900"
           backgroundImageUrl={Consult.src}
         />
-        <div className="w-full md:w-[600px] text-left pl-10">
-          <h2 className="text-blue-900 text-3xl font-bold">
+        <div className="w-full md:w-[50%] text-left px-5 md:px-10">
+          <h2 className="text-blue-900 text-2xl md:text-3xl font-bold">
             Building Healthy Communities
           </h2>
           <p className="text-blue-900 mt-4 text-lg">
@@ -198,8 +205,8 @@ export default function Services() {
             leading to better patient care.
             <br />
             <br />
-            <Link href="/signup">
-              <span className="text-black font-sans border border-blue-300 px-4 py-2 rounded-full hover:bg-blue-300 hover:text-white transition-colors font-semibold">
+            <Link href="/about">
+              <span className="text-black font-sans border border-blue-800 px-4 py-2 rounded-full hover:bg-blue-800 hover:text-white transition-colors font-semibold">
                 About AMaT-HCL
               </span>
             </Link>

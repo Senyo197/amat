@@ -12,7 +12,6 @@ import ReviewProfile from "@/app/_components/dashboard/ReviewProfile";
 import Image from "next/image";
 import Doctor from "@/app/_assets/doctor.png";
 import useLocalStorage from "@/app/hooks/useLocalStorage";
-import DashboardNavMenu from "@/app/_components/dashboard/DashboardNavMenu";
 import DashboardSidebar from "@/app/_components/dashboard/Sidebar";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import axios from "axios";
@@ -43,10 +42,6 @@ export default function Appointment() {
     0
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  // State for mobile sidebar
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const toggleMenu = () => setIsSidebarOpen(!isSidebarOpen);
 
   interface Patient {
     fullName: string;
@@ -155,20 +150,13 @@ export default function Appointment() {
     <>
       <ToastContainer />
       <div className="flex h-screen">
-        {/* Mobile Sidebar Menu */}
-        <DashboardNavMenu
-          patient={patient}
-          isOpen={isSidebarOpen}
-          toggleMenu={toggleMenu}
-        />
-
-        {/* Desktop Sidebar Menu */}
+        {/* Sidebar Menu */}
         <DashboardSidebar patient={patient} />
 
         {/* Main Content Area */}
         <div className="flex flex-col flex-1">
           {/* Navbar */}
-          <DashboardNavbar toggleMenu={toggleMenu} />
+          <DashboardNavbar />
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-6">
