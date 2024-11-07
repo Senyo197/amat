@@ -142,17 +142,13 @@ export default function PatientDashboard() {
     },
   ];
 
-  function toggleMenu(): void {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <div className="min-h-screen flex bg-gray-100">
       <Sidebar patient={patient} />
 
       <div className="flex-1 flex flex-col">
-        {/* Navbar  */}
-        <DashboardNavbar toggleMenu={toggleMenu} />
+        {/* Navbar   */}
+        <DashboardNavbar />
 
         {/* Content */}
         <div className="p-6 flex-1">
