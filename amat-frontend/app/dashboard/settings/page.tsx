@@ -131,7 +131,16 @@ export default function Settings() {
   };
 
   if (!patient) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-lg font-semibold text-gray-700">
+            Just a moment...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

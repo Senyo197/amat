@@ -74,9 +74,8 @@ const MedicalDashboardSidebar = ({
         )}
       </button>
 
-      {/* Sidebar Drawer for Mobile */}
       <div
-        className={`fixed top-0 left-0 h-full w-60 bg-gray-200 shadow-md transition-transform transform ${
+        className={`fixed top-0 left-0 h-full min-h-screen w-60 bg-gray-200 shadow-md transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0 sm:static sm:flex-shrink-0`}
       >
