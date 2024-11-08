@@ -126,8 +126,17 @@ export default function Appointment() {
     window.localStorage.removeItem("currentStep");
   };
 
-  if (!mounted || !patient) {
-    return <div className="text-purple-700">Loading...</div>;
+  if (!patient) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-lg font-semibold text-gray-700">
+            Just a moment...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   const Payment: React.FC<{ onPaymentConfirm: () => void }> = ({

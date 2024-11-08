@@ -26,8 +26,11 @@ export default function HeroCard() {
           {/* Slide 1 */}
           <div className="grid lg:grid-cols-12 lg:gap-8">
             <div className="mr-auto place-self-center lg:col-span-7 p-8">
-              <h2 className="max-w-2xl mb-4 text-2xl sm:text-5xl font-extrabold tracking-tight leading-none text-blue-900">
-                Advans Medical and Health Consultancy
+              <h2 className="max-w-2xl mb-4 text-4xl sm:text-5xl font-extrabold tracking-tight leading-none text-blue-900">
+                Advans Medical and
+              </h2>
+              <h2 className="max-w-2xl mb-4 text-4xl sm:text-5xl font-extrabold tracking-tight leading-none text-blue-900">
+                Health Consultancy
               </h2>
               <p className="max-w-2xl mb-6 font-light text-gray-300 lg:mb-8 text-base sm:text-lg lg:text-xl dark:text-blue-700">
                 Live Right Live Well: Consult A Doctor Anytime
@@ -74,7 +77,10 @@ export default function HeroCard() {
           <div className="grid lg:grid-cols-12 lg:gap-8">
             <div className="mr-auto place-self-center lg:col-span-7 p-8">
               <h2 className="max-w-2xl mb-4 text-4xl sm:text-5xl font-extrabold tracking-tight leading-none text-blue-900">
-                "Your Health, <br className="hidden sm:block" /> Our Priority"
+                "Your Health,
+              </h2>
+              <h2 className="max-w-2xl mb-4 text-4xl sm:text-5xl font-extrabold tracking-tight leading-none text-blue-900">
+                Our Priority"
               </h2>
               <p className="max-w-2xl mb-6 font-light text-gray-300 lg:mb-8 text-base sm:text-lg lg:text-xl dark:text-blue-700">
                 Get Expert Consultation Anytime
