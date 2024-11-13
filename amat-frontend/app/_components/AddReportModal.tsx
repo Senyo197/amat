@@ -12,15 +12,15 @@ interface ReportDetailsType {
 }
 
 interface AddReportModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (reportData: Omit<ReportDetailsType, "id">) => Promise<void>;
+  isOpen?: boolean;
+  onClose?: () => void;
+  onSubmit?: (reportData: Omit<ReportDetailsType, "id">) => Promise<void>;
 }
 
 const AddReportModal: React.FC<AddReportModalProps> = ({
-  isOpen,
-  onClose,
-  onSubmit,
+  isOpen = true, // Default to always showing the modal
+  onClose = () => {}, // Default to a no-op
+  onSubmit = async () => {}, // Default to a no-op
 }) => {
   const [reportDetails, setReportDetails] = useState<
     Omit<ReportDetailsType, "id">
