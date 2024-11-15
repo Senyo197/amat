@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PatientInformation from "./PatientInformation";
 
-// Define the FormData interface for typing the form state
 interface FormData {
   doctor: string;
   referredToLab: boolean;
@@ -22,7 +21,6 @@ interface FormData {
 }
 
 const ReferralForm: React.FC = () => {
-  // Initialize state with the FormData type
   const [formData, setFormData] = useState<FormData>({
     doctor: "",
     referredToLab: false,
@@ -42,9 +40,10 @@ const ReferralForm: React.FC = () => {
     medicalNote: "",
   });
 
-  // Handle input changes for text and textarea fields
   const handleReferralChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -53,22 +52,11 @@ const ReferralForm: React.FC = () => {
     }));
   };
 
-  // Handle checkbox changes (for booleans like referredToLab and insured)
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-  };
-
-  // List of diagnoses
   const diagnoses = ["Atrial Septal Defect", "Ventricular Septal Defect"];
 
-  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData); // Handle form data submission (e.g., send it to an API)
+    console.log(formData);
   };
 
   return (
