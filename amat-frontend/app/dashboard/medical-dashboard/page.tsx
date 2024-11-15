@@ -1,13 +1,19 @@
 "use client";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
-import {
-  dashboardCards,
-  medicalProfessional,
-  patients,
-} from "@/app/_data/mockData";
+import { medicalProfessional, patients } from "@/app/_data/mockData";
+import { FaUser, FaFileAlt, FaComments, FaUserFriends } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
+// Define dashboard card data
+export const dashboardCards = [
+  { icon: FaUser, label: "Patients", count: 150, bgColor: "bg-green-50" },
+  { icon: FaFileAlt, label: "Lab Reports", count: 50, bgColor: "bg-yellow-50" },
+  { icon: FaComments, label: "Urgent", count: 10, bgColor: "bg-blue-50" },
+  { icon: FaUserFriends, label: "Surgeries", count: 5, bgColor: "bg-red-50" },
+];
+
+// Card Component
 const Card = ({
   icon: Icon,
   label,
@@ -34,6 +40,7 @@ const Card = ({
   </div>
 );
 
+// TableRow Component
 const TableRow = ({ patient }: { patient: any }) => {
   const router = useRouter();
 
@@ -92,6 +99,7 @@ const TableRow = ({ patient }: { patient: any }) => {
   );
 };
 
+// Table Component
 const Table = ({ patients }: { patients: any[] }) => (
   <table className="w-full bg-white rounded-lg">
     <thead className="bg-gray-200">
@@ -130,6 +138,7 @@ const Table = ({ patients }: { patients: any[] }) => (
   </table>
 );
 
+// MedicalDashboard Component
 export default function MedicalDashboard() {
   return (
     <div className="min-h-screen flex bg-gray-100">
@@ -140,18 +149,15 @@ export default function MedicalDashboard() {
         </div>
         <div className="flex mt-4 ml-4">
           <div className="flex-1 flex flex-wrap">
-            {dashboardCards.map((card, index) => {
-              const Icon = require("react-icons/fa")[card.icon];
-              return (
-                <Card
-                  key={index}
-                  icon={Icon}
-                  label={card.label}
-                  count={card.count}
-                  bgColor={card.bgColor}
-                />
-              );
-            })}
+            {dashboardCards.map((card, index) => (
+              <Card
+                key={index}
+                icon={card.icon}
+                label={card.label}
+                count={card.count}
+                bgColor={card.bgColor}
+              />
+            ))}
             <div className="mx-3 mt-4">
               <Table patients={patients} />
             </div>

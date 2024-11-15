@@ -1,32 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from "react"; // Import useEffect and useState
+import React, { useEffect, useState } from "react";
 import PatientInformation from "./PatientInformation";
 import { patients } from "@/app/_data/mockData";
 
-type PatientHistoryProps = {
-  patient: {
-    name: string;
-    dob: string;
-    gender: string;
-    contact: string;
-    primaryDiagnosis: string;
-    pastConditions: string[];
-    allergies: string[];
-    medications: string[];
-    visits: {
-      date: string;
-      type: string;
-      doctor: string;
-      notes: string;
-    }[];
-  };
+type Visit = {
+  date: string;
+  type: string;
+  doctor: string;
+  diagnosis: string;
+  medicationPrescribed: string[];
+  notes: string;
 };
 
-const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
-  const [patientData, setPatient] = useState<
-    PatientHistoryProps["patient"] | null
-  >(null);
+type Patient = {
+  id: string;
+  name: string;
+  dob: string;
+  gender: string;
+  contact: string;
+  primaryDiagnosis: string;
+  pastConditions: string[];
+  allergies: string[];
+  medications: string[];
+  visits: Visit[];
+};
+
+const PatientHistory: React.FC = () => {
+  const [patientData, setPatientData] = useState<Patient | null>(null);
 
   useEffect(() => {
     // Extract query parameters from the URL
@@ -34,49 +35,52 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
     const patientId = searchParams.get("id");
 
     if (patientId) {
-      const patientData = patients.find((p) => p.id === patientId);
-      setPatient(patientData || null);
+      const patient = patients.find((p) => p.id === patientId) as
+        | Patient
+        | undefined;
+      setPatientData(patient || null);
+      console.log(patient);
     }
-  }, []); // This will only run once, on component mount
+  }, []);
 
   if (!patientData) {
-    return <div>Loading...</div>; // Handle case when patientData is not available yet
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-lg font-semibold text-gray-700">
+            Just a moment...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 text-black">
       {/* Patient Information Section */}
-      <PatientInformation formData={patientData} handleChange={() => {}} />
-
-      {/* Medical Summary */}
-      <div className="border-b border-gray-300 pb-4">
-        <h2 className="font-semibold text-xl">Medical Summary</h2>
-        <p>
-          <strong>Primary Diagnosis:</strong> {patientData.primaryDiagnosis}
-        </p>
-        <p>
-          <strong>Past Conditions:</strong>{" "}
-          {patientData.pastConditions.join(", ")}
-        </p>
-        <p>
-          <strong>Allergies:</strong> {patientData.allergies.join(", ")}
-        </p>
-      </div>
-
-      {/* Medications */}
-      <div className="border-b border-gray-300 pb-4">
-        <h2 className="font-semibold text-xl">Medications</h2>
-        <ul className="list-disc pl-6">
-          {patientData.medications.map((medication, index) => (
-            <li key={index}>{medication}</li>
-          ))}
-        </ul>
-      </div>
+      <PatientInformation
+        formData={{
+          date: "",
+          time: "",
+          town: "",
+          name: patientData.name,
+          insured: false,
+          age: "",
+          sex: patientData.gender,
+          education: "",
+          occupation: "",
+          religion: "",
+          maritalStatus: "",
+        }}
+        handleChange={() => {}}
+      />
+      <hr className="my-4 border-t-2 border-gray-300" />
 
       {/* Visit History */}
       <div className="border-b border-gray-300 pb-4">
-        <h2 className="font-semibold text-xl">Visit History</h2>
-        {patientData.visits.map((visit, index) => (
+        <h2 className="font-semibold text-xl">Appointment History</h2>
+        {patientData.visits.map((visit: Visit, index: number) => (
           <div key={index} className="mb-4">
             <p>
               <strong>Date:</strong> {visit.date}
@@ -88,14 +92,22 @@ const PatientHistory: React.FC<PatientHistoryProps> = ({ patient }) => {
               <strong>Doctor:</strong> {visit.doctor}
             </p>
             <p>
+              <strong>Diagnosis:</strong> {visit.diagnosis}
+            </p>
+            <p>
+              <strong>Medications Prescribed:</strong>
+              <ul className="list-disc pl-6">
+                {visit.medicationPrescribed.map((medication, index) => (
+                  <li key={index}>{medication}</li>
+                ))}
+              </ul>
+            </p>
+            <p>
               <strong>Notes:</strong> {visit.notes}
             </p>
           </div>
         ))}
       </div>
-
-      {/* Optional: Vaccination History */}
-      {/* Add another section for vaccination history */}
     </div>
   );
 };

@@ -63,7 +63,7 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
   }, []);
 
   return (
-    <div className="h-screen flex flex-col md:relative bg-gray-100">
+    <div className="min-h-screen h-full flex flex-col md:flex-row bg-gray-100">
       {/* Toggle Button for Small Screens */}
       <div className="md:hidden p-4 bg-gray-100">
         <button
@@ -78,7 +78,7 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
       <div
         className={`absolute md:relative z-10 bg-gray-100 p-4 shadow-lg transition-transform transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 w-64 h-full`}
+        } md:translate-x-0 w-64 min-h-screen`} // min-h-screen for full height
       >
         {/* Patient's Profile Section */}
         {patient && (

@@ -4,18 +4,6 @@ export const medicalProfessional = {
   profession: "Hospital Administrator",
 };
 
-export const dashboardCards = [
-  { icon: "FaUser", label: "Patients", count: 150, bgColor: "bg-green-50" },
-  {
-    icon: "FaFileAlt",
-    label: "Lab Reports",
-    count: 50,
-    bgColor: "bg-yellow-50",
-  },
-  { icon: "FaComments", label: "Urgent", count: 10, bgColor: "bg-blue-50" },
-  { icon: "FaUserFriends", label: "Surgeries", count: 5, bgColor: "bg-red-50" },
-];
-
 export const patients = [
   {
     id: "P001",
@@ -39,6 +27,29 @@ export const patients = [
       name: "Dr. Stella",
       image: "https://randomuser.me/api/portraits/men/3.jpg",
     },
+    // New fields for PatientHistory
+    primaryDiagnosis: "Acute Viral Infection",
+    pastConditions: ["Asthma", "Bronchitis"],
+    allergies: ["Peanuts", "Dust"],
+    medications: ["Paracetamol", "Cough Syrup"],
+    visits: [
+      {
+        date: "2024-09-10",
+        type: "Consultation",
+        doctor: "Dr. Stella",
+        diagnosis: "Acute Viral Infection",
+        medicationPrescribed: ["Paracetamol", "Cough Syrup"],
+        notes: "Recommended rest and hydration.",
+      },
+      {
+        date: "2024-08-15",
+        type: "Follow-up",
+        doctor: "Dr. Stella",
+        diagnosis: "Flu",
+        medicationPrescribed: ["Paracetamol"],
+        notes: "Symptoms improving, no medication adjustments.",
+      },
+    ],
   },
   {
     id: "P002",
@@ -62,6 +73,21 @@ export const patients = [
       name: "Dr. Emma",
       image: "https://randomuser.me/api/portraits/women/4.jpg",
     },
+    // New fields for PatientHistory
+    primaryDiagnosis: "Gastroenteritis",
+    pastConditions: ["Irritable Bowel Syndrome"],
+    allergies: ["Seafood"],
+    medications: ["Probiotic", "Antacid"],
+    visits: [
+      {
+        date: "2024-10-01",
+        type: "Emergency",
+        doctor: "Dr. Emma",
+        diagnosis: "Gastroenteritis",
+        medicationPrescribed: ["Probiotic", "Antacid"],
+        notes: "Acute pain, administered antacid and IV fluids.",
+      },
+    ],
   },
   {
     id: "P003",
@@ -85,6 +111,21 @@ export const patients = [
       name: "Dr. John",
       image: "https://randomuser.me/api/portraits/men/4.jpg",
     },
+    // New fields for PatientHistory
+    primaryDiagnosis: "Upper Respiratory Infection",
+    pastConditions: ["Sinusitis"],
+    allergies: ["Penicillin"],
+    medications: ["Decongestant", "Ibuprofen"],
+    visits: [
+      {
+        date: "2024-09-20",
+        type: "Check-up",
+        doctor: "Dr. John",
+        diagnosis: "Upper Respiratory Infection",
+        medicationPrescribed: ["Decongestant", "Ibuprofen"],
+        notes: "Mild congestion, prescribed decongestant.",
+      },
+    ],
   },
   {
     id: "P004",
@@ -108,5 +149,20 @@ export const patients = [
       name: "Dr. Sara",
       image: "https://randomuser.me/api/portraits/women/5.jpg",
     },
+    // New fields for PatientHistory
+    primaryDiagnosis: "Migraine",
+    pastConditions: ["Tension Headaches"],
+    allergies: ["Latex"],
+    medications: ["Sumatriptan", "Pain Reliever"],
+    visits: [
+      {
+        date: "2024-09-25",
+        type: "Consultation",
+        doctor: "Dr. Sara",
+        diagnosis: "Migraine",
+        medicationPrescribed: ["Sumatriptan", "Pain Reliever"],
+        notes: "Recommended avoiding triggers, prescribed medication.",
+      },
+    ],
   },
 ];

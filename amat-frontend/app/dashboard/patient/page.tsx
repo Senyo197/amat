@@ -7,6 +7,7 @@ import PrescriptionForm from "@/app/_components/dashboard/medical-dashboard/Pres
 import ConsultationForm from "@/app/_components/dashboard/medical-dashboard/ConsultationForm";
 import ReferralForm from "@/app/_components/dashboard/medical-dashboard/ReferralForm";
 import AddReportModal from "@/app/_components/AddReportModal";
+import PatientHistory from "@/app/_components/dashboard/medical-dashboard/PatientHistory";
 
 type ReportDetailsType = {
   id: string;
@@ -38,10 +39,7 @@ const ViewPatient: React.FC = () => {
             <h2 className="text-2xl font-semibold text-black">
               Patient History
             </h2>
-            <p className="text-gray-700 mt-4">
-              This section contains the patient's historical medical records,
-              appointments, and other details.
-            </p>
+            <PatientHistory />
           </div>
         );
       case "Consult Patient":
@@ -94,18 +92,26 @@ const ViewPatient: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      <ViewPatientSidebar
-        activeRoute={activeRoute}
-        onRouteChange={setActiveRoute}
-      />
-      <div className="flex-1 flex flex-col">
-        <div className="bg-white shadow-md">
-          <DashboardNavbar />
+    <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
+      <div className="bg-white shadow-md sticky top-0 z-10">
+        <DashboardNavbar />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-1 min-h-screen">
+        {/* Sidebar */}
+        <div className="z-0">
+          {/* Sidebar has a lower z-index and full height */}
+          <ViewPatientSidebar
+            activeRoute={activeRoute}
+            onRouteChange={setActiveRoute}
+          />
         </div>
 
         {/* Content Area */}
-        <div className=" bg-gray-50 p-6 rounded-md shadow-lg">
+        <div className="flex-1 bg-gray-50 p-6 rounded-md shadow-lg pt-16">
+          {/* Added pt-16 to prevent overlap */}
           {renderContent()}
         </div>
       </div>
