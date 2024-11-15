@@ -5,15 +5,13 @@ import { medicalProfessional, patients } from "@/app/_data/mockData";
 import { FaUser, FaFileAlt, FaComments, FaUserFriends } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-// Define dashboard card data
-export const dashboardCards = [
+const dashboardCards = [
   { icon: FaUser, label: "Patients", count: 150, bgColor: "bg-green-50" },
   { icon: FaFileAlt, label: "Lab Reports", count: 50, bgColor: "bg-yellow-50" },
   { icon: FaComments, label: "Urgent", count: 10, bgColor: "bg-blue-50" },
   { icon: FaUserFriends, label: "Surgeries", count: 5, bgColor: "bg-red-50" },
 ];
 
-// Card Component
 const Card = ({
   icon: Icon,
   label,
