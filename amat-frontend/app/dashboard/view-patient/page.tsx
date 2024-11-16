@@ -68,8 +68,8 @@ const ViewPatient: React.FC = () => {
             </h2>
             <AddReportModal
               isOpen={isModalOpen}
-              onClose={() => setModalOpen(false)} // Handle modal close here
-              onSubmit={handleModalSubmit} // Optional: Handle form submission
+              onClose={() => setModalOpen(false)}
+              onSubmit={handleModalSubmit}
             />
             <button
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
@@ -100,18 +100,14 @@ const ViewPatient: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex flex-1 min-h-screen">
-        {/* Sidebar */}
         <div className="z-0">
-          {/* Sidebar has a lower z-index and full height */}
           <ViewPatientSidebar
             activeRoute={activeRoute}
             onRouteChange={setActiveRoute}
           />
         </div>
 
-        {/* Content Area */}
         <div className="flex-1 bg-gray-50 p-6 rounded-md shadow-lg pt-16">
-          {/* Added pt-16 to prevent overlap */}
           {renderContent()}
         </div>
       </div>

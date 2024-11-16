@@ -25,10 +25,9 @@ export default function PrescriptionForm() {
   });
 
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([
-    { item: "", dosage: "", quantity: 0, date: "" }, // Initial empty prescription
+    { item: "", dosage: "", quantity: 0, date: "" },
   ]);
 
-  // Handle input changes for prescriptions
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
@@ -42,7 +41,6 @@ export default function PrescriptionForm() {
     setPrescriptions(updatedPrescriptions);
   };
 
-  // Add a new prescription row
   const addPrescriptionRow = () => {
     setPrescriptions([
       ...prescriptions,
@@ -50,13 +48,11 @@ export default function PrescriptionForm() {
     ]);
   };
 
-  // Delete a prescription row
   const deletePrescriptionRow = (index: number) => {
     const updatedPrescriptions = prescriptions.filter((_, i) => i !== index);
     setPrescriptions(updatedPrescriptions);
   };
 
-  // List of diagnoses
   const diagnoses = ["Enteric fever", "Uncomplicated malaria"];
 
   return (

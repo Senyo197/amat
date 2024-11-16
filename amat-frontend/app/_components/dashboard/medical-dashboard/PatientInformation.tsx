@@ -29,101 +29,50 @@ export default function PatientInformation({
   const [patientData, setPatientData] = useState<any | null>(null);
 
   useEffect(() => {
-    // Extract query parameters from the URL
     const searchParams = new URLSearchParams(window.location.search);
     const patientId = searchParams.get("id");
 
     if (patientId) {
-      // Find the patient based on the `id` from mock data
       const patient = patients.find((p) => p.id === patientId);
       setPatientData(patient || null);
       console.log(patient);
     }
   }, [window.location.search]);
 
+  const inputFields: Array<{
+    label: string;
+    name: keyof PatientInformationProps["formData"];
+    type: string;
+  }> = [
+    { label: "Date of Visit", name: "date", type: "date" },
+    { label: "Time of Visit", name: "time", type: "time" },
+    { label: "Town", name: "town", type: "text" },
+    { label: "Name", name: "name", type: "text" },
+    { label: "Age", name: "age", type: "number" },
+    { label: "Sex", name: "sex", type: "text" },
+    { label: "Education", name: "education", type: "text" },
+    { label: "Occupation", name: "occupation", type: "text" },
+    { label: "Religion", name: "religion", type: "text" },
+    { label: "Marital Status", name: "maritalStatus", type: "text" },
+  ];
+
   return (
     <div className="text-black">
-      <h2 className="font-semibold">Patient Information</h2>
-      <label className="pl-4">Date of Visit:</label>
-      <input
-        type="date"
-        name="date"
-        value={patientData?.date || formData.date}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Time of Visit:</label>
-      <input
-        type="time"
-        name="time"
-        value={patientData?.time || formData.time}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Town:</label>
-      <input
-        type="text"
-        name="town"
-        value={patientData?.town || formData.town}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Name:</label>
-      <input
-        type="text"
-        name="name"
-        value={patientData?.name || formData.name}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Age:</label>
-      <input
-        type="number"
-        name="age"
-        value={patientData?.age || formData.age}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Sex:</label>
-      <input
-        type="text"
-        name="sex"
-        value={patientData?.sex || formData.sex}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Education:</label>
-      <input
-        type="text"
-        name="education"
-        value={patientData?.education || formData.education}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Occupation:</label>
-      <input
-        type="text"
-        name="occupation"
-        value={patientData?.occupation || formData.occupation}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Religion:</label>
-      <input
-        type="text"
-        name="religion"
-        value={patientData?.religion || formData.religion}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
-      <label className="pl-4">Marital Status:</label>
-      <input
-        type="text"
-        name="maritalStatus"
-        value={patientData?.maritalStatus || formData.maritalStatus}
-        onChange={handleChange}
-        className="mt-1 border border-gray-300 rounded-md p-2 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-      />
+      <h2 className="font-semibold text-lg mb-4">Patient Information</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {inputFields.map(({ label, name, type }) => (
+          <div key={name}>
+            <label className="pl-4">{label}:</label>
+            <input
+              type={type}
+              name={name}
+              value={patientData?.[name] || formData[name]}
+              readOnly
+              className="w-full mt-1 border border-gray-300 rounded-md p-2 bg-gray-200 text-gray-700 cursor-not-allowed"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

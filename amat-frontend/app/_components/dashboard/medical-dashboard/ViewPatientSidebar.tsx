@@ -37,7 +37,7 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
   activeRoute,
   onRouteChange,
 }) => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [patient, setPatient] = useState<{
     name: string;
     photo?: string;
@@ -52,7 +52,6 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
   ];
 
   useEffect(() => {
-    // Extract query parameters from the URL
     const searchParams = new URLSearchParams(window.location.search);
     const patientId = searchParams.get("id");
 
@@ -62,23 +61,34 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
     }
   }, []);
 
+  const toggleDrawer = () => setIsOpen(!isOpen);
+
   return (
     <div className="min-h-screen h-full flex flex-col md:flex-row bg-gray-100">
-      {/* Toggle Button for Small Screens */}
-      <div className="md:hidden p-4 bg-gray-100">
-        <button
-          onClick={() => setMenuOpen(!isMenuOpen)}
-          className="text-black bg-gray-200 p-2 rounded-md hover:bg-gray-300"
-        >
-          {isMenuOpen ? <CloseIcon /> : <OpenIcon />}
-        </button>
-      </div>
+      {/* Mobile Menu Toggle Button with SVG icons and text */}
+      <button
+        onClick={toggleDrawer}
+        className={`sm:hidden fixed top-24 z-50 p-2 text-white bg-gray-800 rounded-r-md ${
+          isOpen ? "left-60" : "left-0"
+        }`}
+        aria-label="Toggle Sidebar"
+      >
+        {isOpen ? (
+          <span className="flex items-center gap-2">
+            <CloseIcon /> <span>Close</span>
+          </span>
+        ) : (
+          <span className="flex items-center gap-2">
+            <OpenIcon /> <span>Open</span>
+          </span>
+        )}
+      </button>
 
       {/* Sidebar */}
       <div
-        className={`absolute md:relative z-10 bg-gray-100 p-4 shadow-lg transition-transform transform ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 w-64 min-h-screen`} // min-h-screen for full height
+        className={`fixed md:relative z-40 bg-gray-100 p-4 shadow-lg transition-transform transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 w-64 min-h-screen`}
       >
         {/* Patient's Profile Section */}
         {patient && (
@@ -107,7 +117,7 @@ const ViewPatientSidebar: React.FC<ViewPatientSidebarProps> = ({
               <button
                 onClick={() => {
                   onRouteChange(route);
-                  setMenuOpen(false);
+                  setIsOpen(false);
                 }}
                 className={`w-full text-left px-4 py-2 rounded-md ${
                   activeRoute === route

@@ -30,7 +30,6 @@ const PatientHistory: React.FC = () => {
   const [patientData, setPatientData] = useState<Patient | null>(null);
 
   useEffect(() => {
-    // Extract query parameters from the URL
     const searchParams = new URLSearchParams(window.location.search);
     const patientId = searchParams.get("id");
 

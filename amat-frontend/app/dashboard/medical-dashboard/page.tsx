@@ -86,7 +86,7 @@ const TableRow = ({ patient }: { patient: any }) => {
       </td>
       <td className="py-2 px-4 text-black text-xs whitespace-nowrap w-40 border-b border-gray-200">
         <a
-          href={`/dashboard/patient?id=${patient.id}`}
+          href={`/dashboard/view-patient?id=${patient.id}`}
           className="text-green-500 hover:underline flex items-center"
           onClick={handleNavigation}
         >

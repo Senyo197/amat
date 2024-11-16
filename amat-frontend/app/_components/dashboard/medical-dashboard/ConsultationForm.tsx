@@ -1,8 +1,45 @@
 import { useState } from "react";
-import PatientInformation from "./PatientInformation";
+import PatientInformation from "@/app/_components/dashboard/medical-dashboard/PatientInformation";
+
+type Vitals = {
+  bp: string;
+  height: string;
+  weight: string;
+  bmi: string;
+  temperature: string;
+  pulse: string;
+  heartRate: string;
+  respiration: string;
+  rbs: string;
+  fbs: string;
+  bloodGroup: string;
+  sickling: boolean;
+};
+
+type FormData = {
+  date: string;
+  time: string;
+  town: string;
+  name: string;
+  insured: boolean;
+  age: string;
+  sex: string;
+  education: string;
+  occupation: string;
+  religion: string;
+  maritalStatus: string;
+  vitals: Vitals;
+  principalDiagnosis: string;
+  additionalInformation: string;
+  chronicDiseases: string[];
+  typeOfCase: string;
+  drugReaction: string;
+  outcome: string;
+  reviewDate: string;
+};
 
 export default function MedicalConsultationForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",
     town: "",
@@ -47,15 +84,21 @@ export default function MedicalConsultationForm() {
   };
 
   const handleVitalsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      vitals: { ...prev.vitals, [name]: value },
-    }));
+    const { name, value, type, checked } = e.target;
+
+    if (name in formData.vitals) {
+      setFormData((prev) => ({
+        ...prev,
+        vitals: {
+          ...prev.vitals,
+          [name]: type === "checkbox" ? checked : value,
+        },
+      }));
+    }
   };
 
   return (
-    <form className="border border-gray-300 text-black rounded-md p-6 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all">
+    <form className="max-w-6xl mx-auto p-6 border border-gray-300 text-black rounded-md hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all sm:p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-blue-700 font-extrabold text-xl">
           Medical Consultation Form
@@ -72,114 +115,44 @@ export default function MedicalConsultationForm() {
       <PatientInformation formData={formData} handleChange={handleChange} />
       <hr className="my-4 border-t-2 border-gray-300" />
 
-      {/* Vitals */}
-      <div>
-        <h2 className="font-semibold">Vitals</h2>
-        <label className="pl-4">Blood Pressure:</label>
-        <input
-          type="text"
-          name="bp"
-          value={formData.vitals.bp}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Height:</label>
-        <input
-          type="text"
-          name="height"
-          value={formData.vitals.height}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Weight:</label>
-        <input
-          type="text"
-          name="weight"
-          value={formData.vitals.weight}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">BMI:</label>
-        <input
-          type="text"
-          name="bmi"
-          value={formData.vitals.bmi}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Temperature:</label>
-        <input
-          type="text"
-          name="temperature"
-          value={formData.vitals.temperature}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Pulse:</label>
-        <input
-          type="text"
-          name="pulse"
-          value={formData.vitals.pulse}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Heart Rate:</label>
-        <input
-          type="text"
-          name="heartRate"
-          value={formData.vitals.heartRate}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Respiration:</label>
-        <input
-          type="text"
-          name="respiration"
-          value={formData.vitals.respiration}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">RBS:</label>
-        <input
-          type="text"
-          name="rbs"
-          value={formData.vitals.rbs}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">FBS:</label>
-        <input
-          type="text"
-          name="fbs"
-          value={formData.vitals.fbs}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Blood Group:</label>
-        <input
-          type="text"
-          name="bloodGroup"
-          value={formData.vitals.bloodGroup}
-          onChange={handleVitalsChange}
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
-        <label className="pl-4">Sickling:</label>
-        <input
-          type="checkbox"
-          name="sickling"
-          checked={formData.vitals.sickling}
-          onChange={(e) =>
-            handleVitalsChange({
-              ...e,
-              target: {
-                ...e.target,
-                value: String(e.target.checked),
-              },
-            })
-          }
-          className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
-        />
+      {/* Vitals Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { label: "Blood Pressure", name: "bp" },
+          { label: "Height", name: "height" },
+          { label: "Weight", name: "weight" },
+          { label: "BMI", name: "bmi" },
+          { label: "Temperature", name: "temperature" },
+          { label: "Pulse", name: "pulse" },
+          { label: "Heart Rate", name: "heartRate" },
+          { label: "Respiration", name: "respiration" },
+          { label: "RBS", name: "rbs" },
+          { label: "FBS", name: "fbs" },
+          { label: "Blood Group", name: "bloodGroup" },
+        ].map((vital) => (
+          <div key={vital.name} className="flex flex-col">
+            <label className="pl-4">{vital.label}:</label>
+            <input
+              type="text"
+              name={vital.name}
+              value={(formData.vitals as any)[vital.name]} // Access safely
+              onChange={handleVitalsChange}
+              className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
+            />
+          </div>
+        ))}
+        <div className="flex items-center">
+          <label className="pl-4">Sickling:</label>
+          <input
+            type="checkbox"
+            name="sickling"
+            checked={formData.vitals.sickling}
+            onChange={handleVitalsChange}
+            className="ml-2"
+          />
+        </div>
       </div>
+
       <hr className="my-4 border-t-2 border-gray-300" />
 
       {/* Principal Diagnosis */}
