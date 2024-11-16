@@ -44,7 +44,7 @@ const TableRow = ({ patient }: { patient: any }) => {
 
   const handleNavigation = (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push(`/dashboard/patient?id=${patient.id}`);
+    router.push(`/dashboard/view-patient?id=${patient.id}`);
   };
 
   return (
