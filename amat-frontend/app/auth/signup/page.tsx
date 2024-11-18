@@ -51,6 +51,8 @@ export default function Signup() {
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/signup`,
         formData
       );
+
+      // On successful response (status 201)
       if (response.status === 201) {
         const { token } = response.data;
         localStorage.setItem("token", token);
@@ -62,7 +64,22 @@ export default function Signup() {
       }
     } catch (error) {
       if ((error as any).response?.status === 400) {
-        toast.error("A user with this email already exists");
+        const errorMessage = (error as any).response?.data?.error;
+
+        // Check the specific duplication error message and display appropriate toast
+        if (errorMessage === "Name is already in use") {
+          toast.error(
+            "A user with this name, email, or phone number already exists."
+          );
+        } else if (errorMessage === "A user with this email already exists") {
+          toast.error("This email is already registered.");
+        } else if (
+          errorMessage === "A user with this phone number already exists"
+        ) {
+          toast.error("This phone number is already registered.");
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
       } else {
         console.error("Error creating account: ", error);
       }

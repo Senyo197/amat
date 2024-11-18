@@ -5,13 +5,14 @@ import logo from "../../_assets/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -20,7 +21,6 @@ export default function Login() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const response = await axios.post(
@@ -34,7 +34,7 @@ export default function Login() {
         window.location.href = "/dashboard/patient-dashboard";
       }
     } catch (err) {
-      setError("Invalid email or password");
+      toast.error("Invalid email or password");
       console.error("Error logging in:", err);
     } finally {
       setLoading(false);
@@ -117,8 +117,6 @@ export default function Login() {
             Forget Password?
           </Link>
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-
           <div>
             <button
               type="submit"
@@ -140,6 +138,9 @@ export default function Login() {
           </a>
         </p>
       </div>
+
+      {/* ToastContainer for toast notifications */}
+      <ToastContainer />
     </div>
   );
 }
