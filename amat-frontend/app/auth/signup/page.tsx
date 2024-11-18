@@ -27,7 +27,7 @@ export default function Signup() {
     target: { name: string; value: string };
   }) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name as keyof typeof formData]: value });
   };
 
   const handleContinue = () => {
@@ -189,7 +189,7 @@ export default function Signup() {
                   <select
                     id={name}
                     name={name}
-                    value={formData.name}
+                    value={formData[name as keyof typeof formData]}
                     onChange={handleInputChange}
                     required
                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
@@ -207,7 +207,7 @@ export default function Signup() {
                     name={name}
                     rows={4}
                     placeholder={placeholder}
-                    value={formData.name}
+                    value={formData[name as keyof typeof formData]}
                     onChange={handleInputChange}
                     required
                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
@@ -218,7 +218,7 @@ export default function Signup() {
                     name={name}
                     type={type}
                     placeholder={placeholder}
-                    value={formData.name}
+                    value={formData[name as keyof typeof formData]}
                     onChange={handleInputChange}
                     required
                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
