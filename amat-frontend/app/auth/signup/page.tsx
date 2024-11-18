@@ -1,6 +1,8 @@
 "use client";
 import axios from "axios";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
   const [currentSection, setCurrentSection] = useState(1);
@@ -21,7 +23,9 @@ export default function Signup() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+  const handleInputChange = (e: {
+    target: { name: string; value: string };
+  }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -48,7 +52,6 @@ export default function Signup() {
         formData
       );
       if (response.status === 201) {
-        console.log("Account created successfully: ", response.data);
         const { token } = response.data;
         localStorage.setItem("token", token);
         setShowSuccessModal(true);
@@ -58,16 +61,103 @@ export default function Signup() {
         }, 3000);
       }
     } catch (error) {
-      console.error("Error creating account: ", error);
+      if ((error as any).response?.status === 400) {
+        toast.error("A user with this email already exists");
+      } else {
+        console.error("Error creating account: ", error);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const navigateToDashboard = () => {
-    setLoading(true);
     window.location.href = "/dashboard/patient-dashboard";
   };
+
+  const sections = [
+    [
+      {
+        label: "Full Name",
+        name: "name",
+        type: "text",
+        placeholder: "Enter your full name",
+      },
+      {
+        label: "Date of Birth",
+        name: "dob",
+        type: "date",
+        placeholder: "Enter your date of birth",
+      },
+      {
+        label: "Gender",
+        name: "gender",
+        type: "select",
+        options: ["Male", "Female"],
+      },
+      {
+        label: "Email",
+        name: "email",
+        type: "email",
+        placeholder: "Enter your email address",
+      },
+    ],
+    [
+      {
+        label: "Phone Number",
+        name: "phonenumber",
+        type: "tel",
+        placeholder: "Enter your phone number",
+      },
+      {
+        label: "Address",
+        name: "address",
+        type: "text",
+        placeholder: "Enter your address",
+      },
+      {
+        label: "City",
+        name: "city",
+        type: "text",
+        placeholder: "Enter your city",
+      },
+      {
+        label: "Country",
+        name: "country",
+        type: "text",
+        placeholder: "Enter your country",
+      },
+    ],
+    [
+      {
+        label: "Pre-existing Conditions",
+        name: "preexisting_conditions",
+        type: "textarea",
+        placeholder:
+          "List any chronic illnesses, allergies, past surgeries, etc.",
+      },
+      {
+        label: "Current Medications",
+        name: "current_medications",
+        type: "textarea",
+        placeholder: "List any medications you are currently taking.",
+      },
+    ],
+    [
+      {
+        label: "Password",
+        name: "password",
+        type: "password",
+        placeholder: "Create your password",
+      },
+      {
+        label: "Confirm Password",
+        name: "confirm_password",
+        type: "password",
+        placeholder: "Confirm your password",
+      },
+    ],
+  ];
 
   return (
     <div
@@ -85,284 +175,64 @@ export default function Signup() {
       </div>
 
       <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-4" action="#" method="POST">
-          {/* First Section */}
-          {currentSection === 1 && (
-            <>
-              <div>
+        <form className="space-y-4">
+          {sections[currentSection - 1].map(
+            ({ label, name, type, placeholder, options }) => (
+              <div key={name}>
                 <label
-                  htmlFor="name"
+                  htmlFor={name}
                   className="block text-sm font-medium leading-6 text-blue-900"
                 >
-                  Full Name
+                  {label}
                 </label>
-                <div>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Enter your full name"
-                    required
+                {type === "select" ? (
+                  <select
+                    id={name}
+                    name={name}
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="dob"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Date of Birth
-                </label>
-                <div>
-                  <input
-                    id="dob"
-                    name="dob"
-                    type="date"
-                    autoComplete="bday"
                     required
-                    value={formData.dob}
-                    onChange={handleInputChange}
-                    placeholder="Enter your date of birth"
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="gender"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Gender
-                </label>
-                <div>
-                  <select
-                    id="gender"
-                    name="gender"
-                    required
-                    value={formData.gender}
-                    onChange={handleInputChange}
                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                   >
-                    <option value="">Select your gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="">Select your {label.toLowerCase()}</option>
+                    {options?.map((option) => (
+                      <option key={option} value={option.toLowerCase()}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Email
-                </label>
-                <div>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="Enter your email address"
-                    required
-                    value={formData.email}
+                ) : type === "textarea" ? (
+                  <textarea
+                    id={name}
+                    name={name}
+                    rows={4}
+                    placeholder={placeholder}
+                    value={formData.name}
                     onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Second Section */}
-          {currentSection === 2 && (
-            <>
-              <div>
-                <label
-                  htmlFor="phonenumber"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Phone Number
-                </label>
-                <div>
-                  <input
-                    id="phonenumber"
-                    name="phonenumber"
-                    type="tel"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    autoComplete="tel"
                     required
-                    placeholder="Enter your phone number"
-                    value={formData.phonenumber}
-                    onChange={handleInputChange}
                     className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                   />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Address
-                </label>
-                <div>
+                ) : (
                   <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    placeholder="Enter your address"
+                    id={name}
+                    name={name}
+                    type={type}
+                    placeholder={placeholder}
+                    value={formData.name}
+                    onChange={handleInputChange}
                     required
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-900 sm:text-sm sm:leading-6"
                   />
-                </div>
+                )}
               </div>
-              <div>
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  City
-                </label>
-                <div>
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
-                    placeholder="Enter your city"
-                    required
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Country
-                </label>
-                <div>
-                  <input
-                    id="country"
-                    name="country"
-                    type="text"
-                    placeholder="Enter your country"
-                    required
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Third Section (Medical History) */}
-          {currentSection === 3 && (
-            <>
-              <div>
-                <label
-                  htmlFor="preexisting_conditions"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Pre-existing Conditions
-                </label>
-                <div>
-                  <textarea
-                    id="preexisting_conditions"
-                    name="preexisting_conditions"
-                    rows={4}
-                    placeholder="List chronic illnesses, allergies, past surgeries, etc."
-                    required
-                    value={formData.preexisting_conditions}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="current_medications"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Current Medications
-                </label>
-                <div>
-                  <textarea
-                    id="current_medications"
-                    name="current_medications"
-                    rows={4}
-                    placeholder="List any medications you are currently taking."
-                    value={formData.current_medications}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Fourth Section (Security) */}
-          {currentSection === 4 && (
-            <>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Password
-                </label>
-                <div>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    placeholder="Create your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="confirm_password"
-                  className="block text-sm font-medium leading-6 text-blue-900"
-                >
-                  Confirm Password
-                </label>
-                <div>
-                  <input
-                    id="confirm_password"
-                    name="confirm_password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    placeholder="Confirm your password"
-                    value={formData.confirm_password}
-                    onChange={handleInputChange}
-                    className="block w-full rounded-md border-0 py-2 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </>
+            )
           )}
 
           <div className="flex justify-between">
             <button
               type="button"
               onClick={handleBack}
+              disabled={currentSection === 1}
               className="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md text-blue-900 bg-white border-blue-900 focus:ring-2 focus:ring-inset focus:ring-blue-600"
             >
               Back
@@ -394,6 +264,8 @@ export default function Signup() {
           <div className="loader"></div>
         </div>
       )}
+
+      <ToastContainer />
     </div>
   );
 }

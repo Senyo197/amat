@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// User routes
+// User   routes
 const userRoutes = require("./routes/Users");
 app.use("/api/users", userRoutes);
 

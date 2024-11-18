@@ -48,7 +48,11 @@ const DashboardSidebar = ({ patient }: { patient: Patient }) => {
       href: "/dashboard/patient-dashboard",
       icon: <FaHome />,
     },
-    { name: "Messages", href: "/messages", icon: <FaEnvelope /> },
+    {
+      name: "Messages",
+      href: "/dashboard/patient-dashboard/messages",
+      icon: <FaEnvelope />,
+    },
     {
       name: "Book Appointment",
       href: "/dashboard/appointment",

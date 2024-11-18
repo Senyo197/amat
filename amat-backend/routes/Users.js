@@ -22,10 +22,34 @@ router.post("/signup", async (req, res) => {
       password,
     } = req.body;
 
-    // Check if user already exists
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ error: "User already exists" });
+    // Check if a user exists with the same name combined with either email or phone number
+    const existingUser = await User.findOne({
+      $or: [
+        { name, email },
+        { name, phonenumber },
+      ],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: "Name is already in use",
+      });
+    }
+
+    // Check if email already exists independently
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(400).json({
+        error: "A user with this email already exists",
+      });
+    }
+
+    // Check if phone number already exists independently
+    const phonenumberExists = await User.findOne({ phonenumber });
+    if (phonenumberExists) {
+      return res.status(400).json({
+        error: "A user with this phone number already exists",
+      });
     }
 
     // Hash the password
@@ -33,7 +57,7 @@ router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create a new user
-    user = new User({
+    const user = new User({
       name,
       dob,
       gender,
@@ -68,6 +92,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
+// User login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -78,13 +103,12 @@ router.post("/login", async (req, res) => {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid password" });
     }
 
     const token = jwt.sign(
-      { id: user._id, name: user.name },
+      { id: user._id, name: user.name, lastActivity: Date.now() },
       process.env.JWT_SECRET,
       {
         expiresIn: 86400, // 24 hours
