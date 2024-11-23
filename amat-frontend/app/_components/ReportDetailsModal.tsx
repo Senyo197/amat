@@ -14,7 +14,7 @@ interface ReportDetailsType {
 interface ReportDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  reportId?: string | null; // Use `reportId` to fetch the report dynamically
+  reportId?: string | null;
 }
 
 const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({
