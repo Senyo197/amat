@@ -48,7 +48,7 @@ const ViewPatient: React.FC = () => {
             <h2 className="text-2xl font-semibold text-black">
               Consult Patient
             </h2>
-            <ConsultationForm />
+            <ConsultationForm params={{ appointmentId: "string" }} />
           </div>
         );
       case "Prescribe Medication":
@@ -57,7 +57,7 @@ const ViewPatient: React.FC = () => {
             <h2 className="text-2xl font-semibold text-black">
               Prescribe Medication
             </h2>
-            <PrescriptionForm />
+            <PrescriptionForm appointmentId="string" />
           </div>
         );
       case "Scan/X-Ray/Lab Report":
@@ -70,6 +70,7 @@ const ViewPatient: React.FC = () => {
               isOpen={isModalOpen}
               onClose={() => setModalOpen(false)}
               onSubmit={handleModalSubmit}
+              appointmentId="string"
             />
             <button
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
@@ -83,7 +84,7 @@ const ViewPatient: React.FC = () => {
         return (
           <div>
             <h2 className="text-2xl font-semibold text-black">Refer Patient</h2>
-            <ReferralForm />
+            <ReferralForm appointmentId="string" />
           </div>
         );
       default:
