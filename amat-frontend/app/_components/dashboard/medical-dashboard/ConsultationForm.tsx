@@ -50,13 +50,6 @@ export default function MedicalConsultationForm({
   const router = useRouter();
   const { appointmentId } = params;
 
-  // Check if appointmentId exists
-  if (!appointmentId) {
-    console.error("No appointmentId found in route.");
-    router.push("/404"); // Optional redirect to 404 page if appointmentId is missing
-    return null;
-  }
-
   const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",
