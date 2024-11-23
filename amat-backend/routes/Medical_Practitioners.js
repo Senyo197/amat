@@ -11,9 +11,9 @@ router.post("/medical/signup", async (req, res) => {
       req.body;
 
     // Check if role is valid
-    if (!["doctor", "nurse", "hospital Admin"].includes(role)) {
+    if (!["doctor", "nurse"].includes(role)) {
       return res.status(400).json({
-        error: "Role must be either 'doctor', 'nurse', or 'hospital Admin'",
+        error: "Role must be either 'doctor', 'nurse'",
       });
     }
 

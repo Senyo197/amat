@@ -18,7 +18,7 @@ const Medical_PractitionerSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["doctor", "nurse", "hospital Admin"],
+      enum: ["doctor", "nurse"],
     },
     specializations: {
       type: String,
@@ -36,4 +36,5 @@ const Medical_Practitioner = mongoose.model(
   "Medical_Practitioner",
   Medical_PractitionerSchema
 );
+
 module.exports = Medical_Practitioner;

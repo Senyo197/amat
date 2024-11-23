@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import PatientInformation from "./PatientInformation";
 
 interface FormData {
@@ -20,7 +21,11 @@ interface FormData {
   medicalNote: string;
 }
 
-const ReferralForm: React.FC = () => {
+interface ReferralFormProps {
+  appointmentId: string;
+}
+
+const ReferralForm: React.FC<ReferralFormProps> = ({ appointmentId }) => {
   const [formData, setFormData] = useState<FormData>({
     doctor: "",
     referredToLab: false,
@@ -40,6 +45,30 @@ const ReferralForm: React.FC = () => {
     medicalNote: "",
   });
 
+  const [diagnoses, setDiagnoses] = useState<string[]>([]);
+  const [isLoadingDiagnoses, setIsLoadingDiagnoses] = useState(true);
+
+  // Fetch diagnoses based on appointmentId
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const response = await axios.get(
+          `${backendUrl}/api/book-appointment/${appointmentId}/diagnoses`
+        );
+        console.log("Diagnoses fetched from backend:", response.data);
+        setDiagnoses(response.data.diagnoses || []);
+      } catch (error) {
+        console.error("Error fetching diagnoses:", error);
+        alert("Failed to fetch diagnoses.");
+      } finally {
+        setIsLoadingDiagnoses(false);
+      }
+    };
+
+    if (appointmentId) fetchDiagnoses();
+  }, [appointmentId]);
+
   const handleReferralChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -52,11 +81,23 @@ const ReferralForm: React.FC = () => {
     }));
   };
 
-  const diagnoses = ["Atrial Septal Defect", "Ventricular Septal Defect"];
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      console.log("Submitting referral form data:", formData);
+      const response = await axios.put(
+        `${backendUrl}/api/book-appointment/${appointmentId}`,
+        { referral: formData }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Referral saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving referral:", error);
+      alert("Failed to save referral. Please try again.");
+    }
   };
 
   return (
@@ -86,11 +127,17 @@ const ReferralForm: React.FC = () => {
           <h2 className="font-semibold mb-2 text-black">
             Provisional Diagnoses
           </h2>
-          <ul className="list-disc pl-6 text-black">
-            {diagnoses.map((diagnosis, index) => (
-              <li key={index}>{diagnosis}</li>
-            ))}
-          </ul>
+          {isLoadingDiagnoses ? (
+            <p>Loading diagnoses...</p>
+          ) : diagnoses.length > 0 ? (
+            <ul className="list-disc pl-6 text-black">
+              {diagnoses.map((diagnosis, index) => (
+                <li key={index}>{diagnosis}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No diagnoses available.</p>
+          )}
         </div>
 
         {/* Doctor's Name */}

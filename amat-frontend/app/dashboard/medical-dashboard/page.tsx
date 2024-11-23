@@ -1,92 +1,70 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
-import { medicalProfessional, patients } from "@/app/_data/mockData";
-import { FaUser, FaFileAlt, FaComments, FaUserFriends } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-const dashboardCards = [
-  { icon: FaUser, label: "Patients", count: 150, bgColor: "bg-green-50" },
-  { icon: FaFileAlt, label: "Lab Reports", count: 50, bgColor: "bg-yellow-50" },
-  { icon: FaComments, label: "Urgent", count: 10, bgColor: "bg-blue-50" },
-  { icon: FaUserFriends, label: "Surgeries", count: 5, bgColor: "bg-red-50" },
-];
+interface Appointment {
+  _id: string;
+  patientId: string;
+  practitionerId: string;
+  createdAt: string;
+  appointmentDetails?: {
+    newHealthConcern?: string;
+  };
+  patientName?: string;
+  patientInitials?: string;
+  practitionerName?: string;
+  practitionerImage?: string;
+}
 
-const Card = ({
-  icon: Icon,
-  label,
-  count,
-  bgColor,
-}: {
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  label: string;
-  count: number;
-  bgColor: string;
-}) => (
-  <div
-    className={`shadow-md rounded-lg p-4 w-64 h-24 m-2 flex flex-col items-center justify-between ${bgColor}`}
-  >
-    <div className="flex items-center">
-      <div className="border-2 border-blue-400 rounded-full p-2 bg-white">
-        <Icon className="text-black text-2xl" aria-hidden="true" />
-      </div>
-      <p className="text-sm font-semibold text-gray-900 ml-2 whitespace-nowrap">
-        {label}
-      </p>
-    </div>
-    <p className="text-lg font-bold text-gray-800 whitespace-nowrap">{count}</p>
-  </div>
-);
-
-// TableRow Component
-const TableRow = ({ patient }: { patient: any }) => {
+const TableRow = ({ appointment }: { appointment: Appointment }) => {
   const router = useRouter();
 
   const handleNavigation = (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push(`/dashboard/view-patient?id=${patient.id}`);
+    console.log(`Navigating to appointment ID: ${appointment._id}`);
+    router.push(`/dashboard/view-appointment?id=${appointment._id}`);
   };
 
   return (
-    <tr className="text-left">
+    <tr className="text-left hover:bg-gray-50">
       <td className="py-2 px-4 text-black text-xs whitespace-nowrap w-40">
-        {patient.id}
+        {appointment.patientId}
       </td>
       <td className="py-2 px-2 text-black text-xs whitespace-nowrap w-40">
         <div className="flex items-center">
           <div className="w-8 h-8 bg-gray-300 text-white flex items-center justify-center rounded-full">
-            {patient.initials}
+            {appointment.patientInitials || "N/A"}
           </div>
-          <span className="ml-2">{patient.name}</span>
+          <span className="ml-2">{appointment.patientName || "N/A"}</span>
         </div>
       </td>
       <td className="py-2 px-6 text-black text-xs whitespace-nowrap w-40">
-        {patient.date}
+        {new Date(appointment.createdAt).toLocaleDateString()}
       </td>
       <td className="py-2 px-6 text-black text-xs whitespace-nowrap w-40">
         <span className="border border-blue-300 px-2 py-1 rounded-md">
-          {patient.disease}
+          {appointment.appointmentDetails?.newHealthConcern || "N/A"}
         </span>
-      </td>
-      <td className="py-2 px-6 text-black text-xs whitespace-nowrap w-40">
-        {patient.appointmentType}
-      </td>
-      <td className="py-2 px-7 text-black text-xs whitespace-nowrap w-40">
-        {patient.mode}
       </td>
       <td className="py-2 px-4 text-black text-xs whitespace-nowrap w-40 border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <img
-            src={patient.assignedDoctor.image}
-            alt={patient.assignedDoctor.name}
+            src={appointment.practitionerImage || "/placeholder.png"}
+            alt={appointment.practitionerName || "Practitioner"}
             className="w-8 h-8 rounded-full border border-gray-300"
           />
-          <span className="font-semibold">{patient.assignedDoctor.name}</span>
+          <span className="font-semibold">
+            {appointment.practitionerName || "N/A"}
+          </span>
         </div>
       </td>
       <td className="py-2 px-4 text-black text-xs whitespace-nowrap w-40 border-b border-gray-200">
         <a
-          href={`/dashboard/view-patient?id=${patient.id}`}
+          href={`/dashboard/view-appointment?id=${appointment._id}`}
           className="text-green-500 hover:underline flex items-center"
           onClick={handleNavigation}
         >
@@ -97,8 +75,7 @@ const TableRow = ({ patient }: { patient: any }) => {
   );
 };
 
-// Table Component
-const Table = ({ patients }: { patients: any[] }) => (
+const Table = ({ appointments }: { appointments: Appointment[] }) => (
   <table className="w-full bg-white rounded-lg">
     <thead className="bg-gray-200">
       <tr className="text-left">
@@ -109,19 +86,13 @@ const Table = ({ patients }: { patients: any[] }) => (
           Patient Name
         </th>
         <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-32">
-          Date Check-in
+          Appointment Date
         </th>
         <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-28">
-          Disease
-        </th>
-        <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-48">
-          Type of Appointment
+          Health Concern
         </th>
         <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-40">
-          Online / In-Person
-        </th>
-        <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-40">
-          Assigned Doctor
+          Assigned Practitioner
         </th>
         <th className="py-2 px-4 text-black text-xs whitespace-nowrap w-40">
           View
@@ -129,15 +100,94 @@ const Table = ({ patients }: { patients: any[] }) => (
       </tr>
     </thead>
     <tbody>
-      {patients.map((patient) => (
-        <TableRow key={patient.id} patient={patient} />
-      ))}
+      {appointments.length > 0 ? (
+        appointments.map((appointment) => (
+          <TableRow key={appointment._id} appointment={appointment} />
+        ))
+      ) : (
+        <tr>
+          <td colSpan={6} className="text-center py-4 text-gray-500">
+            No appointments available.
+          </td>
+        </tr>
+      )}
     </tbody>
   </table>
 );
 
-// MedicalDashboard Component
 export default function MedicalDashboard() {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [medicalProfessional, setMedicalProfessional] = useState<any | null>(
+    null
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+          setError("User not authenticated.");
+          setLoading(false);
+          return;
+        }
+
+        console.log("Fetching appointments and practitioner details...");
+
+        const [appointmentsResponse, medicalResponse] = await Promise.all([
+          axios.get(
+            `${
+              process.env.NEXT_PUBLIC_BACKEND_URL
+            }/api/book-appointment/practitioner/${localStorage.getItem(
+              "practitionerId"
+            )}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medical-practitioners/me`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          ),
+        ]);
+
+        console.log("Appointments fetched:", appointmentsResponse.data);
+        console.log("Medical practitioner details:", medicalResponse.data);
+
+        setAppointments(appointmentsResponse.data);
+        setMedicalProfessional(medicalResponse.data);
+      } catch (err: any) {
+        console.error("Error fetching data:", err);
+        setError("Failed to load data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    console.log("Loading...");
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    console.error("Error state:", error);
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       <MedicalDashboardSidebar medicalprofessional={medicalProfessional} />
@@ -147,17 +197,8 @@ export default function MedicalDashboard() {
         </div>
         <div className="flex mt-4 ml-4">
           <div className="flex-1 flex flex-wrap">
-            {dashboardCards.map((card, index) => (
-              <Card
-                key={index}
-                icon={card.icon}
-                label={card.label}
-                count={card.count}
-                bgColor={card.bgColor}
-              />
-            ))}
             <div className="mx-3 mt-4">
-              <Table patients={patients} />
+              <Table appointments={appointments} />
             </div>
           </div>
         </div>

@@ -1,4 +1,8 @@
+"use client";
+
 import { useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 import PatientInformation from "@/app/_components/dashboard/medical-dashboard/PatientInformation";
 
 type Vitals = {
@@ -38,7 +42,21 @@ type FormData = {
   reviewDate: string;
 };
 
-export default function MedicalConsultationForm() {
+export default function MedicalConsultationForm({
+  params,
+}: {
+  params: { appointmentId: string };
+}) {
+  const router = useRouter();
+  const { appointmentId } = params;
+
+  // Check if appointmentId exists
+  if (!appointmentId) {
+    console.error("No appointmentId found in route.");
+    router.push("/404"); // Optional redirect to 404 page if appointmentId is missing
+    return null;
+  }
+
   const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",
@@ -97,8 +115,38 @@ export default function MedicalConsultationForm() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/book-appointment/${appointmentId}`,
+        {
+          vitals: formData.vitals,
+          diagnoses: {
+            principalDiagnosis: formData.principalDiagnosis,
+            additionalInformation: formData.additionalInformation,
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Appointment updated:", response.data);
+    } catch (error) {
+      console.error("Error updating appointment:", error);
+    }
+  };
+
   return (
-    <form className="max-w-6xl mx-auto p-6 border border-gray-300 text-black rounded-md hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all sm:p-8">
+    <form
+      className="max-w-6xl mx-auto p-6 border border-gray-300 text-black rounded-md hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all sm:p-8"
+      onSubmit={handleSubmit}
+    >
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-blue-700 font-extrabold text-xl">
           Medical Consultation Form
@@ -111,31 +159,55 @@ export default function MedicalConsultationForm() {
         </button>
       </div>
 
-      {/* Use the PatientInformation component here */}
+      {/* Patient Information Section */}
       <PatientInformation formData={formData} handleChange={handleChange} />
       <hr className="my-4 border-t-2 border-gray-300" />
 
       {/* Vitals Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[
-          { label: "Blood Pressure", name: "bp" },
-          { label: "Height", name: "height" },
-          { label: "Weight", name: "weight" },
-          { label: "BMI", name: "bmi" },
-          { label: "Temperature", name: "temperature" },
-          { label: "Pulse", name: "pulse" },
-          { label: "Heart Rate", name: "heartRate" },
-          { label: "Respiration", name: "respiration" },
-          { label: "RBS", name: "rbs" },
-          { label: "FBS", name: "fbs" },
-          { label: "Blood Group", name: "bloodGroup" },
+          { name: "bp", label: "Blood Pressure", value: formData.vitals.bp },
+          { name: "height", label: "Height", value: formData.vitals.height },
+          { name: "weight", label: "Weight", value: formData.vitals.weight },
+          { name: "bmi", label: "BMI", value: formData.vitals.bmi },
+          {
+            name: "temperature",
+            label: "Temperature",
+            value: formData.vitals.temperature,
+          },
+          { name: "pulse", label: "Pulse", value: formData.vitals.pulse },
+          {
+            name: "heartRate",
+            label: "Heart Rate",
+            value: formData.vitals.heartRate,
+          },
+          {
+            name: "respiration",
+            label: "Respiration",
+            value: formData.vitals.respiration,
+          },
+          {
+            name: "rbs",
+            label: "Random Blood Sugar",
+            value: formData.vitals.rbs,
+          },
+          {
+            name: "fbs",
+            label: "Fasting Blood Sugar",
+            value: formData.vitals.fbs,
+          },
+          {
+            name: "bloodGroup",
+            label: "Blood Group",
+            value: formData.vitals.bloodGroup,
+          },
         ].map((vital) => (
           <div key={vital.name} className="flex flex-col">
             <label className="pl-4">{vital.label}:</label>
             <input
               type="text"
               name={vital.name}
-              value={(formData.vitals as any)[vital.name]} // Access safely
+              value={vital.value}
               onChange={handleVitalsChange}
               className="border border-gray-300 text-black rounded-md p-1 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
             />
@@ -155,7 +227,7 @@ export default function MedicalConsultationForm() {
 
       <hr className="my-4 border-t-2 border-gray-300" />
 
-      {/* Principal Diagnosis */}
+      {/* Diagnosis Section */}
       <div>
         <h2 className="font-semibold">Diagnosis</h2>
         <label className="pl-4">Principal Diagnosis:</label>

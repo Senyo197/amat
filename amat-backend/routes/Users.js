@@ -15,8 +15,12 @@ router.post("/signup", async (req, res) => {
       email,
       phonenumber,
       address,
-      city,
+      town,
       country,
+      education,
+      occupation,
+      religion,
+      maritalStatus,
       preexisting_conditions,
       current_medications,
       password,
@@ -64,8 +68,12 @@ router.post("/signup", async (req, res) => {
       email,
       phonenumber,
       address,
-      city,
+      town,
       country,
+      education,
+      occupation,
+      religion,
+      maritalStatus,
       preexisting_conditions,
       current_medications,
       password: hashedPassword,
@@ -155,60 +163,42 @@ router.get("/", async (req, res) => {
 router.put("/profile", verifyToken, async (req, res) => {
   try {
     const userId = req.userId;
-    const { name, email, dob, gender, phonenumber, address, city, country } =
-      req.body;
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { name, email, dob, gender, phonenumber, address, city, country },
-      { new: true }
-    ).select("-password");
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.error("Error updating profile settings:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+    const {
+      name,
+      email,
+      dob,
+      gender,
+      phonenumber,
+      address,
+      town,
+      country,
+      education,
+      occupation,
+      religion,
+      maritalStatus,
+    } = req.body;
 
-// Update Notification Settings
-router.put("/notifications", verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { emailNotifications, smsNotifications, pushNotifications } =
-      req.body;
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        "notifications.emailNotifications": emailNotifications,
-        "notifications.smsNotifications": smsNotifications,
-        "notifications.pushNotifications": pushNotifications,
+        name,
+        email,
+        dob,
+        gender,
+        phonenumber,
+        address,
+        town,
+        country,
+        education,
+        occupation,
+        religion,
+        maritalStatus,
       },
       { new: true }
     ).select("-password");
     res.status(200).json(updatedUser);
   } catch (err) {
-    console.error("Error updating notification settings:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// Update Security Settings
-router.put("/security", verifyToken, async (req, res) => {
-  try {
-    const userId = req.userId;
-    const { newPassword, twoFactorAuth } = req.body;
-
-    const updates = { twoFactorAuth };
-    if (newPassword) {
-      const salt = await bcrypt.genSalt(10);
-      updates.password = await bcrypt.hash(newPassword, salt);
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
-      new: true,
-    }).select("-password");
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.error("Error updating security settings:", err);
+    console.error("Error updating profile settings:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

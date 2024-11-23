@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
 import PatientInformation from "./PatientInformation";
 
@@ -9,7 +10,13 @@ interface Prescription {
   date: string;
 }
 
-export default function PrescriptionForm() {
+interface PrescriptionFormProps {
+  appointmentId: string;
+}
+
+const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
+  appointmentId,
+}) => {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
@@ -27,6 +34,31 @@ export default function PrescriptionForm() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([
     { item: "", dosage: "", quantity: 0, date: "" },
   ]);
+
+  const [diagnoses, setDiagnoses] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingDiagnoses, setIsLoadingDiagnoses] = useState(true);
+
+  // Fetch diagnoses based on appointmentId
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const response = await axios.get(
+          `${backendUrl}/api/book-appointment/${appointmentId}/diagnoses`
+        );
+        console.log("Diagnoses fetched from backend:", response.data);
+        setDiagnoses(response.data.diagnoses || []);
+      } catch (error) {
+        console.error("Error fetching diagnoses:", error);
+        alert("Failed to fetch diagnoses.");
+      } finally {
+        setIsLoadingDiagnoses(false);
+      }
+    };
+
+    if (appointmentId) fetchDiagnoses();
+  }, [appointmentId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -53,19 +85,46 @@ export default function PrescriptionForm() {
     setPrescriptions(updatedPrescriptions);
   };
 
-  const diagnoses = ["Enteric fever", "Uncomplicated malaria"];
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      console.log("Submitting prescriptions payload:", prescriptions);
+      const response = await axios.put(
+        `${backendUrl}/api/book-appointment/${appointmentId}`,
+        { prescribedMedications: prescriptions }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Prescriptions saved successfully!");
+      }
+    } catch (error) {
+      console.error("Error saving prescriptions:", error);
+      alert("Failed to save prescriptions. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    <form className="border border-gray-300 text-black rounded-md p-6 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all">
+    <form
+      className="border border-gray-300 text-black rounded-md p-6 hover:border-blue-500 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
+      onSubmit={handleSubmit}
+    >
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-blue-700 font-extrabold text-xl">
           Prescription Form
         </h1>
         <button
           type="submit"
-          className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+          disabled={isSaving}
+          className={`px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all ${
+            isSaving ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          Save
+          {isSaving ? "Saving..." : "Save"}
         </button>
       </div>
 
@@ -80,11 +139,17 @@ export default function PrescriptionForm() {
       {/* Diagnoses Section */}
       <div className="mt-6">
         <h2 className="font-semibold mb-2 text-black">Provisional Diagnoses</h2>
-        <ul className="list-disc pl-6 text-black">
-          {diagnoses.map((diagnosis, index) => (
-            <li key={index}>{diagnosis}</li>
-          ))}
-        </ul>
+        {isLoadingDiagnoses ? (
+          <p>Loading diagnoses...</p>
+        ) : diagnoses.length > 0 ? (
+          <ul className="list-disc pl-6 text-black">
+            {diagnoses.map((diagnosis, index) => (
+              <li key={index}>{diagnosis}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No diagnoses available.</p>
+        )}
       </div>
 
       {/* Prescriptions Section */}
@@ -158,4 +223,6 @@ export default function PrescriptionForm() {
       </div>
     </form>
   );
-}
+};
+
+export default PrescriptionForm;

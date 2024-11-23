@@ -27,11 +27,27 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    city: {
+    town: {
       type: String,
       required: true,
     },
     country: {
+      type: String,
+      required: true,
+    },
+    education: {
+      type: String,
+      required: true,
+    },
+    occupation: {
+      type: String,
+      required: true,
+    },
+    religion: {
+      type: String,
+      required: true,
+    },
+    maritalStatus: {
       type: String,
       required: true,
     },

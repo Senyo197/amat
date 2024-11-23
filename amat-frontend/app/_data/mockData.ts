@@ -27,7 +27,7 @@ export const patients = [
       name: "Dr. Stella",
       image: "https://randomuser.me/api/portraits/men/3.jpg",
     },
-    // New fields for PatientHistory
+    // New  fields for PatientHistory
     primaryDiagnosis: "Acute Viral Infection",
     pastConditions: ["Asthma", "Bronchitis"],
     allergies: ["Peanuts", "Dust"],

@@ -13,8 +13,12 @@ export default function Signup() {
     email: "",
     phonenumber: "",
     address: "",
-    city: "",
+    town: "",
     country: "",
+    education: "",
+    occupation: "",
+    religion: "",
+    maritalStatus: "",
     preexisting_conditions: "",
     current_medications: "",
     password: "",
@@ -31,7 +35,7 @@ export default function Signup() {
   };
 
   const handleContinue = () => {
-    if (currentSection < 4) {
+    if (currentSection < 5) {
       setCurrentSection(currentSection + 1);
     } else {
       handleSubmit();
@@ -52,7 +56,6 @@ export default function Signup() {
         formData
       );
 
-      // On successful response (status 201)
       if (response.status === 201) {
         const { token } = response.data;
         localStorage.setItem("token", token);
@@ -65,8 +68,6 @@ export default function Signup() {
     } catch (error) {
       if ((error as any).response?.status === 400) {
         const errorMessage = (error as any).response?.data?.error;
-
-        // Check the specific duplication error message and display appropriate toast
         if (errorMessage === "Name is already in use") {
           toast.error(
             "A user with this name, email, or phone number already exists."
@@ -133,16 +134,42 @@ export default function Signup() {
         placeholder: "Enter your address",
       },
       {
-        label: "City",
-        name: "city",
+        label: "Town",
+        name: "town",
         type: "text",
-        placeholder: "Enter your city",
+        placeholder: "Enter your town",
       },
       {
         label: "Country",
         name: "country",
         type: "text",
         placeholder: "Enter your country",
+      },
+    ],
+    [
+      {
+        label: "Education",
+        name: "education",
+        type: "text",
+        placeholder: "Enter your highest level of education",
+      },
+      {
+        label: "Occupation",
+        name: "occupation",
+        type: "text",
+        placeholder: "Enter your current occupation",
+      },
+      {
+        label: "Religion",
+        name: "religion",
+        type: "text",
+        placeholder: "Enter your religion",
+      },
+      {
+        label: "Marital Status",
+        name: "maritalStatus",
+        type: "text",
+        placeholder: "Enter your marital status",
       },
     ],
     [
@@ -259,26 +286,18 @@ export default function Signup() {
               onClick={handleContinue}
               className="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md text-white bg-blue-900 border-transparent focus:ring-2 focus:ring-inset focus:ring-blue-600"
             >
-              {currentSection === 4 ? "Submit" : "Next"}
+              {currentSection === 5 ? "Submit" : "Next"}
             </button>
           </div>
         </form>
       </div>
 
       {showSuccessModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-md">
-            <h3 className="text-lg font-medium text-green-600">Success!</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Account created successfully.
-            </p>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opatown-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <h2 className="text-lg font-bold mb-4">Account Created</h2>
+            <p>Redirecting to your dashboard...</p>
           </div>
-        </div>
-      )}
-
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="loader"></div>
         </div>
       )}
 

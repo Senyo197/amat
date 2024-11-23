@@ -1,7 +1,9 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import { patients } from "@/app/_data/mockData";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
-type PatientInformationProps = {
+interface PatientInformationProps {
   formData: {
     date: string;
     time: string;
@@ -15,45 +17,84 @@ type PatientInformationProps = {
     religion: string;
     maritalStatus: string;
   };
-  handleChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => void;
-};
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 export default function PatientInformation({
   formData,
   handleChange,
 }: PatientInformationProps) {
   const [patientData, setPatientData] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const searchParams = useSearchParams();
+  const patientId = searchParams.get("id");
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const patientId = searchParams.get("id");
+    const fetchPatientData = async () => {
+      if (!patientId) {
+        setError("No patient ID provided.");
+        setLoading(false);
+        return;
+      }
 
-    if (patientId) {
-      const patient = patients.find((p) => p.id === patientId);
-      setPatientData(patient || null);
-      console.log(patient);
-    }
-  }, [window.location.search]);
+      try {
+        // Fetch patient data from the backend
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/patients/${patientId}`
+        );
+        const data = response.data;
 
-  const inputFields: Array<{
-    label: string;
-    name: keyof PatientInformationProps["formData"];
-    type: string;
-  }> = [
-    { label: "Date of Visit", name: "date", type: "date" },
-    { label: "Time of Visit", name: "time", type: "time" },
-    { label: "Town", name: "town", type: "text" },
+        // Calculate age based on dob
+        if (data?.dob) {
+          const today = new Date();
+          const dob = new Date(data.dob);
+          const age = today.getFullYear() - dob.getFullYear();
+          const adjustedAge =
+            today.getMonth() > dob.getMonth() ||
+            (today.getMonth() === dob.getMonth() &&
+              today.getDate() >= dob.getDate())
+              ? age
+              : age - 1;
+
+          setPatientData({ ...data, age: adjustedAge });
+        } else {
+          setPatientData(data);
+        }
+      } catch (err) {
+        console.error("Error fetching patient data:", err);
+        setError("Failed to fetch patient data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatientData();
+  }, [patientId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
+  const inputFields = [
     { label: "Name", name: "name", type: "text" },
     { label: "Age", name: "age", type: "number" },
-    { label: "Sex", name: "sex", type: "text" },
+    { label: "Gender", name: "sex", type: "text" },
+    { label: "Email", name: "email", type: "email" },
+    { label: "Phone Number", name: "phoneNumber", type: "text" },
+    { label: "Address", name: "address", type: "text" },
+    { label: "Town", name: "town", type: "text" },
+    { label: "Country", name: "country", type: "text" },
     { label: "Education", name: "education", type: "text" },
     { label: "Occupation", name: "occupation", type: "text" },
     { label: "Religion", name: "religion", type: "text" },
     { label: "Marital Status", name: "maritalStatus", type: "text" },
+    {
+      label: "Preexisting Conditions",
+      name: "preexisting_conditions",
+      type: "text",
+    },
+    { label: "Current Medications", name: "current_medications", type: "text" },
   ];
 
   return (
@@ -66,7 +107,7 @@ export default function PatientInformation({
             <input
               type={type}
               name={name}
-              value={patientData?.[name] || formData[name]}
+              value={patientData?.[name] || ""}
               readOnly
               className="w-full mt-1 border border-gray-300 rounded-md p-2 bg-gray-200 text-gray-700 cursor-not-allowed"
             />

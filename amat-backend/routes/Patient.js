@@ -1,36 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { MongoClient, ObjectId } = require("mongodb");
-
-const client = new MongoClient(process.env.MONGO_URI);
-
-// Middleware to connect to the database
-async function connectToDatabase() {
-  try {
-    await client.connect();
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-    throw error; // Rethrow the error for handling in the route
-  }
-}
-
-// Middleware to connect to database for every request
-router.use(async (req, res, next) => {
-  try {
-    await connectToDatabase();
-    next();
-  } catch (error) {
-    res.status(500).json({ message: "Database connection error." });
-  }
-});
+const User = require("../models/User");
+const BookAppointment = require("../models/Book_Appointment");
 
 // GET all patients
 router.get("/", async (req, res) => {
   try {
-    const database = client.db("amat_backend");
-    const patientsCollection = database.collection("users");
-    const patients = await patientsCollection.find({}).toArray();
+    const patients = await User.find({});
     res.status(200).json(patients);
   } catch (error) {
     console.error("Error fetching patients:", error);
@@ -42,15 +18,30 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const patientId = req.params.id;
   try {
-    const database = client.db("amat_backend"); // Use your MongoDB database name
-    const patientsCollection = database.collection("users");
-    const patient = await patientsCollection.findOne({
-      _id: new ObjectId(patientId), // Correctly convert string ID to ObjectId
-    });
+    const patient = await User.findById(patientId);
+
     if (!patient) {
       return res.status(404).json({ message: "Patient not found." });
     }
-    res.status(200).json(patient);
+
+    const patientInformation = {
+      name: patient.name,
+      dob: patient.dob,
+      gender: patient.gender,
+      email: patient.email,
+      phonenumber: patient.phonenumber,
+      address: patient.address,
+      city: patient.city,
+      country: patient.country,
+      education: patient.education,
+      occupation: patient.occupation,
+      religion: patient.religion,
+      maritalStatus: patient.maritalStatus,
+      preexisting_conditions: patient.preexisting_conditions || "",
+      current_medications: patient.current_medications || "",
+    };
+
+    res.status(200).json(patientInformation);
   } catch (error) {
     console.error("Error fetching patient:", error);
     res.status(500).json({ message: "Error fetching patient." });
@@ -60,26 +51,22 @@ router.get("/:id", async (req, res) => {
 // Update patient by ID
 router.put("/:id", async (req, res) => {
   const patientId = req.params.id;
-  const updatedPatient = req.body; // Get the updated patient data from the request body
+  const updatedPatient = req.body;
 
   try {
-    const database = client.db("amat_backend"); // Use your MongoDB database name
-    const patientsCollection = database.collection("users");
-    const result = await patientsCollection.updateOne(
-      { _id: new ObjectId(patientId) }, // Correctly convert string ID to ObjectId
-      { $set: updatedPatient }
-    );
-
-    if (result.matchedCount === 0) {
+    const result = await User.findByIdAndUpdate(patientId, updatedPatient, {
+      new: true,
+    });
+    if (!result) {
       return res.status(404).json({ message: "Patient not found" });
     }
-
-    res
-      .status(200)
-      .json({ message: "Patient updated successfully", updatedPatient });
+    res.status(200).json({
+      message: "Patient updated successfully",
+      updatedPatient: result,
+    });
   } catch (error) {
     console.error("Error updating patient:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -87,20 +74,34 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const patientId = req.params.id;
   try {
-    const database = client.db("amat_backend"); // Use your MongoDB database name
-    const patientsCollection = database.collection("users");
-    const result = await patientsCollection.deleteOne({
-      _id: new ObjectId(patientId),
-    }); // Correctly convert string ID to ObjectId
-
-    if (result.deletedCount === 0) {
+    const result = await User.findByIdAndDelete(patientId);
+    if (!result) {
       return res.status(404).json({ message: "Patient not found" });
     }
-
     res.status(200).json({ message: "Patient deleted successfully" });
   } catch (error) {
     console.error("Error deleting patient:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+// GET patient and their appointments by ID
+router.get("/:id/appointments", async (req, res) => {
+  const patientId = req.params.id;
+  try {
+    // Fetch the patient
+    const patient = await User.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found." });
+    }
+
+    // Fetch appointments for the patient
+    const appointments = await BookAppointment.find({ patientId: patientId });
+
+    res.status(200).json({ patient, appointments });
+  } catch (error) {
+    console.error("Error fetching user and appointments:", error);
+    res.status(500).json({ message: "Error fetching user and appointments." });
   }
 });
 
