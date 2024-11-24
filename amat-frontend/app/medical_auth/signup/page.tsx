@@ -2,14 +2,12 @@
 import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import logo from "../../_assets/logo.png";
 import Image from "next/image";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function MedicalSignup() {
-  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,7 +46,7 @@ export default function MedicalSignup() {
           autoClose: 3000,
         });
         setTimeout(() => {
-          router.push("/medical_auth/login");
+          window.location.href = "/medical_auth/login";
         }, 3000);
         setFormData({
           name: "",

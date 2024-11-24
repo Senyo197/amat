@@ -90,7 +90,7 @@ export default function Signup() {
   };
 
   const navigateToDashboard = () => {
-    window.location.href = "/dashboard/patient-dashboard";
+    window.location.href = "/auth/login";
   };
 
   const sections = [

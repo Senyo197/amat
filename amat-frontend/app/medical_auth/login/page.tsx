@@ -34,7 +34,7 @@ export default function MedicalDashboardLogin() {
         toast.success("Login successful!", { position: "top-center" });
         setTimeout(() => {
           window.location.href = "/dashboard/medical-dashboard";
-        }, 1500);
+        }, 3000);
       }
     } catch (err) {
       toast.error("Invalid email or password", { position: "top-center" });
