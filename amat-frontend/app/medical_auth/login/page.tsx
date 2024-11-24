@@ -5,13 +5,14 @@ import logo from "../../_assets/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function MedicalDashboardLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -20,7 +21,6 @@ export default function MedicalDashboardLogin() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const response = await axios.post(
@@ -31,10 +31,13 @@ export default function MedicalDashboardLogin() {
       if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem("token", token);
-        window.location.href = "/dashboard/medical-dashboard";
+        toast.success("Login successful!", { position: "top-center" });
+        setTimeout(() => {
+          window.location.href = "/dashboard/medical-dashboard";
+        }, 1500);
       }
     } catch (err) {
-      setError("Invalid email or password");
+      toast.error("Invalid email or password", { position: "top-center" });
       console.error("Error logging in:", err);
     } finally {
       setLoading(false);
@@ -120,8 +123,6 @@ export default function MedicalDashboardLogin() {
             Forget Password?
           </Link>
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-
           <div>
             <button
               type="submit"
@@ -133,6 +134,8 @@ export default function MedicalDashboardLogin() {
           </div>
         </form>
       </div>
+      {/* ToastContainer for toast notifications */}
+      <ToastContainer />
     </div>
   );
 }

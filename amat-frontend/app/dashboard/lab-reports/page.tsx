@@ -2,7 +2,6 @@
 import { useState } from "react";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
-import AddReportModal from "@/app/_components/AddReportModal";
 import ReportDetailsModal from "@/app/_components/ReportDetailsModal";
 import { FaEye } from "react-icons/fa";
 
@@ -129,13 +128,8 @@ const LabReportsPage = () => {
           </table>
         </div>
       </div>
-      <AddReportModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddReport}
-      />
       <ReportDetailsModal
-        report={selectedReport}
+        reportId={selectedReport ? selectedReport.id : null}
         isOpen={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
       />

@@ -103,7 +103,7 @@ const MedicalDashboardSidebar = ({
             </li>
             <li>
               <a
-                href="/dashboard/patient"
+                href="/dashboard/patients"
                 className="flex justify-between items-center py-2 px-4 text-base text-black hover:bg-blue-200 rounded-lg"
               >
                 Patients

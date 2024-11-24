@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import PatientInformation from "./PatientInformation";
-import { patients } from "@/app/_data/mockData";
 
-type Visit = {
+type Appointment = {
+  visitNumber: number;
   date: string;
   type: string;
   doctor: string;
@@ -23,26 +24,56 @@ type Patient = {
   pastConditions: string[];
   allergies: string[];
   medications: string[];
-  visits: Visit[];
+  appointments: Appointment[];
 };
 
 const PatientHistory: React.FC = () => {
   const [patientData, setPatientData] = useState<Patient | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const patientId = searchParams.get("id");
+    const fetchPatientHistory = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const patientId = searchParams.get("id");
 
-    if (patientId) {
-      const patient = patients.find((p) => p.id === patientId) as
-        | Patient
-        | undefined;
-      setPatientData(patient || null);
-      console.log(patient);
-    }
+      if (!patientId) {
+        setError("No patient ID found in the URL.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `/api/book-appointments/history/${patientId}`
+        );
+        const data = response.data;
+
+        setPatientData({
+          id: patientId,
+          name: "Patient Name",
+          dob: "Patient DOB",
+          gender: "Patient Gender",
+          contact: "Patient Contact",
+          primaryDiagnosis: "",
+          pastConditions: [],
+          allergies: [],
+          medications: [],
+          appointments: data,
+        });
+      } catch (err: any) {
+        setError(
+          err.response?.data?.message || "Failed to fetch patient history."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatientHistory();
   }, []);
 
-  if (!patientData) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
         <div className="text-center">
@@ -51,6 +82,26 @@ const PatientHistory: React.FC = () => {
             Just a moment...
           </p>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-red-100">
+        <div className="text-center">
+          <p className="text-lg font-semibold text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!patientData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <p className="text-lg font-semibold text-gray-700">
+          No patient history found.
+        </p>
       </div>
     );
   }
@@ -76,33 +127,36 @@ const PatientHistory: React.FC = () => {
       />
       <hr className="my-4 border-t-2 border-gray-300" />
 
-      {/* Visit History */}
+      {/* Appointment History */}
       <div className="border-b border-gray-300 pb-4">
         <h2 className="font-semibold text-xl">Appointment History</h2>
-        {patientData.visits.map((visit: Visit, index: number) => (
-          <div key={index} className="mb-4">
+        {patientData.appointments.map((appointment: Appointment) => (
+          <div key={appointment.visitNumber} className="mb-4">
             <p>
-              <strong>Date:</strong> {visit.date}
+              <strong>Visit Number:</strong> {appointment.visitNumber}
             </p>
             <p>
-              <strong>Visit Type:</strong> {visit.type}
+              <strong>Date:</strong> {appointment.date}
             </p>
             <p>
-              <strong>Doctor:</strong> {visit.doctor}
+              <strong>Appointment Type:</strong> {appointment.type}
             </p>
             <p>
-              <strong>Diagnosis:</strong> {visit.diagnosis}
+              <strong>Doctor:</strong> {appointment.doctor}
+            </p>
+            <p>
+              <strong>Diagnosis:</strong> {appointment.diagnosis}
             </p>
             <p>
               <strong>Medications Prescribed:</strong>
               <ul className="list-disc pl-6">
-                {visit.medicationPrescribed.map((medication, index) => (
+                {appointment.medicationPrescribed.map((medication, index) => (
                   <li key={index}>{medication}</li>
                 ))}
               </ul>
             </p>
             <p>
-              <strong>Notes:</strong> {visit.notes}
+              <strong>Notes:</strong> {appointment.notes}
             </p>
           </div>
         ))}

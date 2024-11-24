@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 import { FaTimes } from "react-icons/fa";
 
 interface ReportDetailsType {
@@ -15,12 +16,14 @@ interface AddReportModalProps {
   isOpen?: boolean;
   onClose?: () => void;
   onSubmit?: (reportData: Omit<ReportDetailsType, "id">) => Promise<void>;
+  appointmentId: string; // Pass the appointmentId as a prop
 }
 
 const AddReportModal: React.FC<AddReportModalProps> = ({
-  isOpen = true, // Default to always showing the modal
-  onClose = () => {}, // Default to a no-op
-  onSubmit = async () => {}, // Default to a no-op
+  isOpen = true,
+  onClose = () => {},
+  onSubmit = async () => {},
+  appointmentId, // Receive appointmentId as a prop
 }) => {
   const [reportDetails, setReportDetails] = useState<
     Omit<ReportDetailsType, "id">
@@ -43,8 +46,22 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(reportDetails);
-    onClose();
+
+    try {
+      console.log("Submitting report data:", reportDetails);
+
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/book-appointment/${appointmentId}`,
+        { labXrayReports: reportDetails }
+      );
+
+      console.log("Report uploaded successfully", response.data);
+      alert("Report uploaded successfully!");
+      onClose();
+    } catch (error) {
+      console.error("Error uploading report:", error);
+      alert("An error occurred while uploading the report. Please try again.");
+    }
   };
 
   if (!isOpen) return null;
