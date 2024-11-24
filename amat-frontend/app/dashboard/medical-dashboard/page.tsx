@@ -126,7 +126,7 @@ export default function MedicalDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("token");
         if (!token) {
           setError("User not authenticated.");
           setLoading(false);
