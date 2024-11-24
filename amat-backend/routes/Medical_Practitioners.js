@@ -3,7 +3,7 @@ const router = express.Router();
 const Medical_Practitioner = require("../models/Medical_Practitioner");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const verifyMedicalToken = require("./verifyMedicalToken");
+const verifyMedicalToken = require("../middleware/verifyMedicalToken");
 
 // Medical Practitioner Signup
 router.post("/medical/signup", async (req, res) => {
