@@ -1,10 +1,9 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import DashboardNavbar from "@/app/_components/dashboard/DashboardNavbar";
 import MedicalDashboardSidebar from "@/app/_components/dashboard/MedicalDashboardSidebar";
 import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 interface Appointment {
   _id: string;
@@ -133,21 +132,25 @@ export default function MedicalDashboard() {
           return;
         }
 
-        console.log("Fetching appointments and practitioner details...");
+        // Decode the token to extract the practitioner ID
+        const decodedToken: any = jwtDecode(token);
+        console.log(decodedToken);
+        const practitionerId = decodedToken?.practitionerId;
 
-        const [appointmentsResponse, medicalResponse] = await Promise.all([
+        if (!practitionerId) {
+          setError("Practitioner ID not found.");
+          setLoading(false);
+          return;
+        }
+
+        console.log(
+          "Fetching appointments for practitioner ID:",
+          practitionerId
+        );
+
+        const [appointmentsResponse] = await Promise.all([
           axios.get(
-            `${
-              process.env.NEXT_PUBLIC_BACKEND_URL
-            }/api/book-appointment/practitioner/${localStorage.getItem(
-              "practitionerId"
-            )}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          ),
-          axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medical-practitioners/me`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/book-appointment/practitioner/${practitionerId}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -155,10 +158,8 @@ export default function MedicalDashboard() {
         ]);
 
         console.log("Appointments fetched:", appointmentsResponse.data);
-        console.log("Medical practitioner details:", medicalResponse.data);
 
         setAppointments(appointmentsResponse.data);
-        setMedicalProfessional(medicalResponse.data);
       } catch (err: any) {
         console.error("Error fetching data:", err);
         setError("Failed to load data.");
@@ -171,7 +172,6 @@ export default function MedicalDashboard() {
   }, []);
 
   if (loading) {
-    console.log("Loading...");
     return (
       <div className="flex justify-center items-center min-h-screen">
         Loading...
@@ -180,7 +180,6 @@ export default function MedicalDashboard() {
   }
 
   if (error) {
-    console.error("Error state:", error);
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-red-500">{error}</p>
