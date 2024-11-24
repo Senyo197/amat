@@ -35,7 +35,7 @@ export default function MedicalSignup() {
       }
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medical-practitioners/signup`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medical-practitioners/medical/signup`,
         formData
       );
 
