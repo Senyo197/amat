@@ -7,8 +7,15 @@ const jwt = require("jsonwebtoken");
 // Medical Practitioner Signup
 router.post("/medical/signup", async (req, res) => {
   try {
-    const { name, email, phonenumber, role, specializations, password } =
-      req.body;
+    const {
+      name,
+      email,
+      phonenumber,
+      role,
+      specializations,
+      licenseCertificate,
+      password,
+    } = req.body;
 
     // Check if role is valid
     if (!["doctor", "nurse"].includes(role)) {
@@ -62,6 +69,7 @@ router.post("/medical/signup", async (req, res) => {
       phonenumber,
       role,
       specializations,
+      licenseCertificate,
       password: hashedPassword,
     });
 

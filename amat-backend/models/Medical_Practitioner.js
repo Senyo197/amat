@@ -24,6 +24,10 @@ const Medical_PractitionerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    licenseCertificate: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
