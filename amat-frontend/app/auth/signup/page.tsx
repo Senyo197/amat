@@ -63,7 +63,7 @@ export default function Signup() {
         setTimeout(() => {
           setShowSuccessModal(false);
           navigateToDashboard();
-        }, 3000);
+        }, 1500);
       }
     } catch (error) {
       if ((error as any).response?.status === 400) {

@@ -47,7 +47,7 @@ export default function MedicalSignup() {
         });
         setTimeout(() => {
           window.location.href = "/medical_auth/login";
-        }, 3000);
+        }, 1500);
         setFormData({
           name: "",
           email: "",
