@@ -136,8 +136,8 @@ export default function MedicalDashboard() {
 
         // Decode the token to extract the practitioner ID
         const decodedToken: any = jwtDecode(token);
-        console.log(decodedToken);
-        const practitionerId = decodedToken?.practitionerId;
+        console.log("Decoded Token:", decodedToken);
+        const practitionerId = decodedToken?.id;
 
         if (!practitionerId) {
           setError("Practitioner ID not found.");

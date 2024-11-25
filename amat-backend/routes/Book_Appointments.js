@@ -3,6 +3,7 @@ const router = express.Router();
 const BookAppointment = require("../models/Book_Appointment");
 const Medical_Practitioner = require("../models/Medical_Practitioner");
 const verifyToken = require("../middleware/verifyToken");
+const verifyMedicalToken = require("../middleware/verifyMedicalToken");
 
 // POST general appointment booking (authenticated patient)
 router.post("/", verifyToken, async (req, res) => {
@@ -53,7 +54,7 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 // PUT appointment details (authenticated medical practitioner)
-router.put("/:appointmentId", async (req, res) => {
+router.put("/:appointmentId", verifyMedicalToken, async (req, res) => {
   try {
     const { appointmentId } = req.params;
     const {
@@ -127,28 +128,32 @@ router.get("/patient/:patientId", async (req, res) => {
 });
 
 // GET appointments by practitioner ID
-router.get("/practitioner/:practitionerId", verifyToken, async (req, res) => {
-  const { practitionerId } = req.params;
+router.get(
+  "/practitioner/:practitionerId",
+  verifyMedicalToken,
+  async (req, res) => {
+    const { practitionerId } = req.params;
 
-  try {
-    const appointments = await BookAppointment.find({ practitionerId }).sort({
-      createdAt: -1,
-    });
+    try {
+      const appointments = await BookAppointment.find({ practitionerId }).sort({
+        createdAt: -1,
+      });
 
-    if (!appointments.length) {
-      return res
-        .status(404)
-        .json({ message: "No appointments found for this practitioner." });
+      if (!appointments.length) {
+        return res
+          .status(404)
+          .json({ message: "No appointments found for this practitioner." });
+      }
+
+      res.status(200).json(appointments);
+    } catch (error) {
+      console.error("Error fetching practitioner appointments:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching practitioner appointments." });
     }
-
-    res.status(200).json(appointments);
-  } catch (error) {
-    console.error("Error fetching practitioner appointments:", error);
-    res
-      .status(500)
-      .json({ message: "Error fetching practitioner appointments." });
   }
-});
+);
 
 // GET specific appointment by ID
 router.get("/:appointmentId", async (req, res) => {
