@@ -166,9 +166,8 @@ export default function MedicalDashboard() {
         // Handle different error responses
         if (err.response) {
           if (err.response.status === 404) {
-            // Show the "no appointments" message, but still render the table structure
+            setAppointments([]);
             setError("No appointments found for this practitioner.");
-            setAppointments([]); // keep appointments empty but render the table
           } else if (err.response.status === 500) {
             setError(
               "There was an issue with the server. Please try again later."
@@ -193,6 +192,14 @@ export default function MedicalDashboard() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       <MedicalDashboardSidebar medicalprofessional={medicalProfessional} />
@@ -203,9 +210,6 @@ export default function MedicalDashboard() {
         <div className="flex mt-4 ml-4">
           <div className="flex-1 flex flex-wrap">
             <div className="mx-3 mt-4">
-              {error && (
-                <div className="text-center py-4 text-red-500">{error}</div>
-              )}
               <Table appointments={appointments} />
             </div>
           </div>
