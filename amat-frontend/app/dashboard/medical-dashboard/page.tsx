@@ -166,6 +166,7 @@ export default function MedicalDashboard() {
         // Handle different error responses
         if (err.response) {
           if (err.response.status === 404) {
+            setAppointments([]);
             setError("No appointments found for this practitioner.");
           } else if (err.response.status === 500) {
             setError(
