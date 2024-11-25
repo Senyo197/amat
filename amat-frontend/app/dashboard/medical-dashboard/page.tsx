@@ -150,21 +150,31 @@ export default function MedicalDashboard() {
           practitionerId
         );
 
-        const [appointmentsResponse] = await Promise.all([
-          axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/book-appointment/practitioner/${practitionerId}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          ),
-        ]);
+        const appointmentsResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/book-appointment/practitioner/${practitionerId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
+        // If appointments are successfully fetched
         console.log("Appointments fetched:", appointmentsResponse.data);
-
         setAppointments(appointmentsResponse.data);
       } catch (err: any) {
         console.error("Error fetching data:", err);
-        setError("Failed to load data.");
+
+        // Handle different error responses
+        if (err.response) {
+          if (err.response.status === 404) {
+            setError("No appointments found for this practitioner.");
+          } else if (err.response.status === 500) {
+            setError(
+              "There was an issue with the server. Please try again later."
+            );
+          }
+        } else {
+          setError("Failed to load data. Please check your connection.");
+        }
       } finally {
         setLoading(false);
       }
