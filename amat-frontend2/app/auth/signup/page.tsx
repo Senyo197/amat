@@ -49,6 +49,25 @@ export default function Signup() {
   };
 
   const handleSubmit = async () => {
+    // Fields that are optional
+    const optionalFields = ["preexisting_conditions", "current_medications"];
+
+    // Validate required fields
+    for (const key in formData) {
+      if (
+        !optionalFields.includes(key) &&
+        !formData[key as keyof typeof formData]
+      ) {
+        toast.error(`Please fill out the ${key.replace("_", " ")} field.`);
+        return; // Exit the function if a required field is missing
+      }
+    }
+
+    if (formData.password !== formData.confirm_password) {
+      toast.error("Passwords do not match. Please try again.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.post(
@@ -204,11 +223,7 @@ export default function Signup() {
   ];
 
   return (
-    <div
-      className={`flex min-h-screen flex-col justify-center px-6 py-5 lg:px-8 ${
-        loading ? "blur-sm" : ""
-      }`}
-    >
+    <div className={"flex min-h-screen flex-col justify-center px-6 py-5"}>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-9 text-center text-2xl font-bold leading-9 tracking-tight text-blue-900">
           Sign up for an account
@@ -276,30 +291,58 @@ export default function Signup() {
             <button
               type="button"
               onClick={handleBack}
-              disabled={currentSection === 1}
-              className="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md text-blue-900 bg-white border-blue-900 focus:ring-2 focus:ring-inset focus:ring-blue-600"
+              disabled={currentSection === 1 || loading}
+              className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${
+                loading
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "text-blue-900 bg-white border-blue-900"
+              } focus:ring-2 focus:ring-inset focus:ring-blue-600`}
             >
               Back
             </button>
             <button
               type="button"
               onClick={handleContinue}
-              className="inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md text-white bg-blue-900 border-transparent focus:ring-2 focus:ring-inset focus:ring-blue-600"
+              disabled={loading}
+              className={`inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${
+                loading
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "text-white bg-blue-900 border-transparent"
+              } focus:ring-2 focus:ring-inset focus:ring-blue-600`}
             >
-              {currentSection === 5 ? "Submit" : "Next"}
+              {loading ? (
+                <span className="flex items-center">
+                  <svg
+                    className="animate-spin h-4 w-4 mr-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                  Processing...
+                </span>
+              ) : currentSection === 5 ? (
+                "Submit"
+              ) : (
+                "Next"
+              )}
             </button>
           </div>
         </form>
       </div>
-
-      {showSuccessModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opatown-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-lg font-bold mb-4">Account Created</h2>
-            <p>Redirecting to your dashboard...</p>
-          </div>
-        </div>
-      )}
 
       <ToastContainer />
     </div>
