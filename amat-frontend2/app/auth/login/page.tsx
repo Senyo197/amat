@@ -8,7 +8,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function MedicalDashboardLogin() {
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,20 +24,17 @@ export default function MedicalDashboardLogin() {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medical-practitioners/medical/login`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/login`,
         { email, password }
       );
 
       if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem("token", token);
-        toast.success("Login successful!", { position: "top-center" });
-        setTimeout(() => {
-          window.location.href = "/dashboard/medical-dashboard";
-        }, 1500);
+        window.location.href = "/dashboard/patient-dashboard";
       }
     } catch (err) {
-      toast.error("Invalid email or password", { position: "top-center" });
+      toast.error("Invalid email or password");
       console.error("Error logging in:", err);
     } finally {
       setLoading(false);
@@ -45,7 +42,7 @@ export default function MedicalDashboardLogin() {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-9 lg:px-8">
+    <div className="flex min-h-full flex-col justify-center px-6 py-40 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image
           className="mx-auto w-auto mb-3"
@@ -54,10 +51,7 @@ export default function MedicalDashboardLogin() {
           width={70}
           height={70}
         />
-        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-blue-900">
-          Medical Practitioner
-        </h2>
-        <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-blue-900">
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-blue-900">
           Log in to your account
         </h2>
       </div>
@@ -133,16 +127,18 @@ export default function MedicalDashboardLogin() {
             </button>
           </div>
         </form>
+
         <p className="mt-10 text-center text-sm text-gray-500">
           Don't have an account?
           <a
-            href="/medical_auth/signup"
+            href="/auth/signup"
             className="font-semibold leading-6 text-blue-900 hover:text-blue-500"
           >
             Sign Up Now!
           </a>
         </p>
       </div>
+
       {/* ToastContainer for toast notifications */}
       <ToastContainer />
     </div>
