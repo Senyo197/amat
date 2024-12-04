@@ -5,7 +5,66 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verifyMedicalToken = require("../middleware/verifyMedicalToken");
 
-// Medical Practitioner Signup
+/**
+ * @swagger
+ * tags:
+ *   name: Medical Practitioners
+ *   description: API for managing medical practitioners (Doctors and Nurses)
+ */
+
+/**
+ * @swagger
+ * /medical/signup:
+ *   post:
+ *     summary: Medical Practitioner Signup
+ *     tags: [Medical Practitioners]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phonenumber:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [doctor, nurse]
+ *               specializations:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               licenseCertificate:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - email
+ *               - phonenumber
+ *               - role
+ *               - password
+ *     responses:
+ *       201:
+ *         description: Medical practitioner successfully registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 medical_practitioner:
+ *                   type: object
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid input or email/phone number already in use
+ *       500:
+ *         description: Internal server error
+ */
 router.post("/medical/signup", async (req, res) => {
   try {
     const {
@@ -91,7 +150,45 @@ router.post("/medical/signup", async (req, res) => {
   }
 });
 
-// Medical Practitioner Login
+/**
+ * @swagger
+ * /medical/login:
+ *   post:
+ *     summary: Medical Practitioner Login
+ *     tags: [Medical Practitioners]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       200:
+ *         description: Successfully logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 medical_practitioner:
+ *                   type: object
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Invalid password
+ *       404:
+ *         description: Medical Practitioner not found
+ *       500:
+ *         description: Internal server error
+ */
 router.post("/medical/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -129,7 +226,35 @@ router.post("/medical/login", async (req, res) => {
   }
 });
 
-// Get all Medical Practitioners (doctors)
+/**
+ * @swagger
+ * /medical/doctors:
+ *   get:
+ *     summary: Get all doctors
+ *     tags: [Medical Practitioners]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of doctors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   phonenumber:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/medical/doctors", verifyMedicalToken, async (req, res) => {
   try {
     const doctors = await Medical_Practitioner.find({ role: "doctor" });
@@ -140,7 +265,35 @@ router.get("/medical/doctors", verifyMedicalToken, async (req, res) => {
   }
 });
 
-// Get all Medical Practitioners (nurses)
+/**
+ * @swagger
+ * /medical/nurses:
+ *   get:
+ *     summary: Get all nurses
+ *     tags: [Medical Practitioners]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of nurses
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   phonenumber:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/medical/nurses", verifyMedicalToken, async (req, res) => {
   try {
     const nurses = await Medical_Practitioner.find({ role: "nurse" });

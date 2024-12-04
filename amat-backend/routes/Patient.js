@@ -3,7 +3,17 @@ const router = express.Router();
 const User = require("../models/User");
 const BookAppointment = require("../models/Book_Appointment");
 
-// GET all patients
+/**
+ * @swagger
+ * /patients:
+ *   get:
+ *     summary: Get all patients
+ *     responses:
+ *       200:
+ *         description: List of all patients
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/", async (req, res) => {
   try {
     const patients = await User.find({});
@@ -14,7 +24,55 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET patient by ID
+/**
+ * @swagger
+ * /patients/{id}:
+ *   get:
+ *     summary: Get a patient by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the patient
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Patient information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                 dob:
+ *                   type: string
+ *                 gender:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 phonenumber:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 city:
+ *                   type: string
+ *                 country:
+ *                   type: string
+ *                 education:
+ *                   type: string
+ *                 occupation:
+ *                   type: string
+ *                 religion:
+ *                   type: string
+ *                 maritalStatus:
+ *                   type: string
+ *       404:
+ *         description: Patient not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/:id", async (req, res) => {
   const patientId = req.params.id;
   try {
@@ -48,7 +106,57 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Update patient by ID
+/**
+ * @swagger
+ * /patients/{id}:
+ *   put:
+ *     summary: Update a patient's information by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the patient
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               dob:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phonenumber:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               city:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               occupation:
+ *                 type: string
+ *               religion:
+ *                 type: string
+ *               maritalStatus:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Patient updated successfully
+ *       404:
+ *         description: Patient not found
+ *       500:
+ *         description: Internal server error
+ */
 router.put("/:id", async (req, res) => {
   const patientId = req.params.id;
   const updatedPatient = req.body;
@@ -70,7 +178,26 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Delete patient by ID
+/**
+ * @swagger
+ * /patients/{id}:
+ *   delete:
+ *     summary: Delete a patient by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the patient
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Patient deleted successfully
+ *       404:
+ *         description: Patient not found
+ *       500:
+ *         description: Internal server error
+ */
 router.delete("/:id", async (req, res) => {
   const patientId = req.params.id;
   try {
@@ -85,17 +212,45 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// GET patient and their appointments by ID
+/**
+ * @swagger
+ * /patients/{id}/appointments:
+ *   get:
+ *     summary: Get all appointments for a patient by ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the patient
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of patient's appointments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 patient:
+ *                   $ref: '#/components/schemas/Patient'
+ *                 appointments:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Appointment'
+ *       404:
+ *         description: Patient not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/:id/appointments", async (req, res) => {
   const patientId = req.params.id;
   try {
-    // Fetch the patient
     const patient = await User.findById(patientId);
     if (!patient) {
       return res.status(404).json({ message: "Patient not found." });
     }
 
-    // Fetch appointments for the patient
     const appointments = await BookAppointment.find({ patientId: patientId });
 
     res.status(200).json({ patient, appointments });

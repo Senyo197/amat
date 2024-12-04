@@ -5,7 +5,56 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../middleware/verifyToken");
 
-// Create a new user (signup)
+/**
+ * @swagger
+ * /auth/signup:
+ *   post:
+ *     summary: Create a new user (signup)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               dob:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phonenumber:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               town:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               occupation:
+ *                 type: string
+ *               religion:
+ *                 type: string
+ *               maritalStatus:
+ *                 type: string
+ *               preexisting_conditions:
+ *                 type: string
+ *               current_medications:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully with token
+ *       400:
+ *         description: Invalid input or user already exists
+ *       500:
+ *         description: Internal server error
+ */
 router.post("/signup", async (req, res) => {
   try {
     const {
@@ -100,7 +149,32 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// User login
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: User login
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in successfully with token
+ *       401:
+ *         description: Invalid credentials
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -134,7 +208,21 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Protected route to get user data
+/**
+ * @swagger
+ * /auth/protected:
+ *   get:
+ *     summary: Get protected user data (requires token)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User data returned
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/protected", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
@@ -148,7 +236,17 @@ router.get("/protected", verifyToken, async (req, res) => {
   }
 });
 
-// Get all users
+/**
+ * @swagger
+ * /auth/users:
+ *   get:
+ *     summary: Get all users (admin)
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/", async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -159,7 +257,52 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Update Profile Settings
+/**
+ * @swagger
+ * /auth/profile:
+ *   put:
+ *     summary: Update profile settings for logged-in user
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               dob:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               phonenumber:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *               town:
+ *                 type: string
+ *               country:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               occupation:
+ *                 type: string
+ *               religion:
+ *                 type: string
+ *               maritalStatus:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
 router.put("/profile", verifyToken, async (req, res) => {
   try {
     const userId = req.userId;
